@@ -1,0 +1,39 @@
+:root {
+  /* Backgrounds */
+  --bg:         #0A0E0D;
+  --bg-panel:   #111614;
+  --bg-raised:  #181E1C;
+
+  /* Typography */
+  --cream:      #EDE8DE;
+  --cream-soft: #C4BDB3;
+  --cream-mute: #7A756E;
+
+  /* Accent — use sparingly */
+  --teal:       #4A9B94;
+  --teal-deep:  #2C6B66;
+  --sand:       #C9B79C;
+  --sand-deep:  #8A7355;
+
+  /* Lines */
+  --line:       rgba(237,232,222,0.10);
+  --line-soft:  rgba(237,232,222,0.06);
+
+  /* Typography scale */
+  --serif: "Cormorant Garamond", Georgia, serif;
+  --mono:  "IBM Plex Mono", monospace;
+  --sans:  "Jost", system-ui, sans-serif;
+}
+
+[data-theme="light"] {
+  --bg:         #F5F0E6;
+  --bg-panel:   #EDE8DE;
+  --bg-raised:  #FFFFFF;
+  --cream:      #16201E;
+  --cream-soft: #3A3530;
+  --cream-mute: #6B6560;
+  --line:       rgba(22,32,30,0.10);
+  --line-soft:  rgba(22,32,30,0.06);
+  --sand:       #8A7355;
+  --teal:       #2C6B66;
+}
