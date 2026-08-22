@@ -4,13 +4,11 @@ import chartData from "../content/chartData";
 import useInViewOnce from "../hooks/useInViewOnce";
 
 const CHART_HEIGHT = 280;
+const AXIS_LABEL_WIDTH = 52;
 
-// Explicit per-bar palettes for known bar charts, so every bar/country gets
-// a distinct color instead of a teal->sand gradient.
-const BAR_COLORS = {
-  "s3.c2": ["#4A9B94", "#C9B79C", "#7B9E87", "#9B7B9E", "#9E7B7B"],
-  "s3.c1": ["#4A9B94", "#7B9E87", "#C9B79C", "#9B8B6E", "#2C6B66"],
-};
+// Bar gradient endpoints, keyed by value rank rather than bar position.
+const BAR_GRADIENT_LOW = "#6B5535";
+const BAR_GRADIENT_HIGH = "#D4A843";
 
 function cssVar(name) {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -28,15 +26,22 @@ function rgbaFromHex(hex, alpha) {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
-function gradientColors(hexA, hexB, count) {
+function mixHex(hexA, hexB, t) {
   const a = hexToRgb(hexA);
   const b = hexToRgb(hexB);
-  return Array.from({ length: count }, (_, i) => {
-    const step = count === 1 ? 0 : i / (count - 1);
-    const r = Math.round(a.r + (b.r - a.r) * step);
-    const g = Math.round(a.g + (b.g - a.g) * step);
-    const bl = Math.round(a.b + (b.b - a.b) * step);
-    return `rgb(${r},${g},${bl})`;
+  const r = Math.round(a.r + (b.r - a.r) * t);
+  const g = Math.round(a.g + (b.g - a.g) * t);
+  const bl = Math.round(a.b + (b.b - a.b) * t);
+  return `rgb(${r},${g},${bl})`;
+}
+
+function valueGradientColors(values) {
+  const max = Math.max(...values);
+  const min = Math.min(...values);
+  const span = max - min;
+  return values.map((v) => {
+    const t = span === 0 ? 1 : (v - min) / span;
+    return mixHex(BAR_GRADIENT_LOW, BAR_GRADIENT_HIGH, t);
   });
 }
 
@@ -78,7 +83,7 @@ function roundRectTop(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
-function drawAxes(ctx, { padding, plotW, plotH, canvasHeight, yMax, xTicks, tickColor, gridColor, axisColor, fontFamily, axisXTitle, axisYTitle }) {
+function drawAxes(ctx, { padding, plotW, plotH, yMax, xTicks, tickColor, gridColor, axisColor, fontFamily, axisXTitle, canvasHeight }) {
   const tickCount = 4;
   ctx.font = `9px ${fontFamily}`;
   ctx.lineWidth = 1;
@@ -109,16 +114,6 @@ function drawAxes(ctx, { padding, plotW, plotH, canvasHeight, yMax, xTicks, tick
   ctx.textBaseline = "top";
   xTicks.forEach(({ x, label }) => ctx.fillText(label, x, padding.top + plotH + 8));
 
-  if (axisYTitle) {
-    ctx.save();
-    ctx.translate(10, padding.top + plotH / 2);
-    ctx.rotate(-Math.PI / 2);
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = tickColor;
-    ctx.fillText(axisYTitle, 0, 0);
-    ctx.restore();
-  }
   if (axisXTitle) {
     ctx.textAlign = "center";
     ctx.textBaseline = "bottom";
@@ -127,26 +122,36 @@ function drawAxes(ctx, { padding, plotW, plotH, canvasHeight, yMax, xTicks, tick
   }
 }
 
+function AxisYLabel({ text }) {
+  if (!text) return null;
+  return (
+    <div className="chart-axis-y-label">
+      <span>{text}</span>
+    </div>
+  );
+}
+
 function LineChartCanvas({ config, lang, t }) {
   const wrapRef = useRef(null);
   const canvasRef = useRef(null);
+  const tooltipRef = useRef(null);
   const rafRef = useRef(null);
 
   useEffect(() => {
     const wrap = wrapRef.current;
     const canvas = canvasRef.current;
+    const tooltip = tooltipRef.current;
     if (!wrap || !canvas) return undefined;
 
     const tickColor = cssVar("--cream-mute");
     const gridColor = rgbaFromHex(cssVar("--cream"), 0.08);
     const axisColor = rgbaFromHex(cssVar("--cream"), 0.2);
     const fontFamily = cssVar("--mono");
-    const seriesColors = [cssVar("--teal"), cssVar("--sand"), cssVar("--sand-deep")];
+    const seriesColors = [cssVar("--teal"), cssVar("--cream-soft"), cssVar("--teal-deep")];
     const labels = config.labels[lang];
     const n = labels.length;
     const yMax = config.yMax ?? niceMax(Math.max(...config.datasets.flatMap((d) => d.values)));
     const axisXTitle = config.axisX?.[lang];
-    const axisYTitle = config.axisY?.[lang];
 
     let size = { width: 0, height: CHART_HEIGHT };
     let state = { phase: "idle", startTime: 0 };
@@ -180,7 +185,6 @@ function LineChartCanvas({ config, lang, t }) {
         axisColor,
         fontFamily,
         axisXTitle,
-        axisYTitle,
       });
 
       const totalSegments = n - 1;
@@ -192,7 +196,7 @@ function LineChartCanvas({ config, lang, t }) {
 
         ctx.beginPath();
         ctx.strokeStyle = color;
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 2.5;
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
         ctx.moveTo(xAt(0), yAt(values[0]));
@@ -284,6 +288,37 @@ function LineChartCanvas({ config, lang, t }) {
       draw(lastProgress, lastPulse);
     }
 
+    function handleMouseMove(e) {
+      if (!tooltip) return;
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      const { xAt, yAt } = layout();
+      let best = null;
+      let bestDist = 14;
+      config.datasets.forEach((ds) => {
+        ds.values.forEach((v, i) => {
+          const dist = Math.hypot(xAt(i) - mx, yAt(v) - my);
+          if (dist < bestDist) {
+            bestDist = dist;
+            best = { x: xAt(i), y: yAt(v), v };
+          }
+        });
+      });
+      if (best) {
+        tooltip.style.opacity = "1";
+        tooltip.style.left = `${best.x}px`;
+        tooltip.style.top = `${best.y}px`;
+        tooltip.textContent = String(best.v);
+      } else {
+        tooltip.style.opacity = "0";
+      }
+    }
+
+    function handleMouseLeave() {
+      if (tooltip) tooltip.style.opacity = "0";
+    }
+
     resize();
 
     const resizeObserver = new ResizeObserver(resize);
@@ -301,44 +336,56 @@ function LineChartCanvas({ config, lang, t }) {
     );
     intersectionObserver.observe(wrap);
 
+    canvas.addEventListener("mousemove", handleMouseMove);
+    canvas.addEventListener("mouseleave", handleMouseLeave);
+
     return () => {
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
+      canvas.removeEventListener("mousemove", handleMouseMove);
+      canvas.removeEventListener("mouseleave", handleMouseLeave);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [config, lang, t]);
 
   return (
-    <div ref={wrapRef} style={{ width: "100%", height: `${CHART_HEIGHT}px` }}>
-      <canvas ref={canvasRef} style={{ width: "100%", height: `${CHART_HEIGHT}px`, display: "block" }} />
+    <div className="chart-canvas-outer" style={{ height: `${CHART_HEIGHT}px` }}>
+      <AxisYLabel text={config.axisY?.[lang]} />
+      <div
+        ref={wrapRef}
+        className="chart-canvas-wrap"
+        style={{ marginLeft: `${AXIS_LABEL_WIDTH}px`, height: `${CHART_HEIGHT}px` }}
+      >
+        <canvas ref={canvasRef} style={{ width: "100%", height: `${CHART_HEIGHT}px`, display: "block" }} />
+        <div ref={tooltipRef} className="chart-tooltip" />
+      </div>
     </div>
   );
 }
 
-function BarChartCanvas({ config, lang, section }) {
+function BarChartCanvas({ config, lang }) {
   const wrapRef = useRef(null);
   const canvasRef = useRef(null);
+  const tooltipRef = useRef(null);
   const rafRef = useRef(null);
 
   useEffect(() => {
     const wrap = wrapRef.current;
     const canvas = canvasRef.current;
+    const tooltip = tooltipRef.current;
     if (!wrap || !canvas) return undefined;
 
     const tickColor = cssVar("--cream-mute");
     const gridColor = rgbaFromHex(cssVar("--cream"), 0.08);
     const axisColor = rgbaFromHex(cssVar("--cream"), 0.2);
     const fontFamily = cssVar("--mono");
-    const teal = cssVar("--teal");
-    const sandDeep = cssVar("--sand-deep");
     const labels = config.labels[lang];
     const { values } = config;
     const n = values.length;
-    const colors = BAR_COLORS[section] ?? gradientColors(sandDeep, teal, n);
+    const colors = valueGradientColors(values);
     const yMax = config.yMax ?? niceMax(Math.max(...values));
     const axisXTitle = config.axisX?.[lang];
-    const axisYTitle = config.axisY?.[lang];
 
     const STAGGER_MS = 80;
     const BAR_DURATION_MS = 1200;
@@ -358,11 +405,22 @@ function BarChartCanvas({ config, lang, section }) {
       return { padding, plotW, plotH, barWidth, centerX };
     }
 
+    function barRect(i, elapsedMs) {
+      const { padding, plotH, barWidth, centerX } = layout();
+      const baselineY = padding.top + plotH;
+      const delay = i * STAGGER_MS;
+      const raw = Math.min(Math.max((elapsedMs - delay) / BAR_DURATION_MS, 0), 1);
+      const eased = easeInOutQuart(raw);
+      const fullHeight = (plotH * values[i]) / yMax;
+      const h = fullHeight * eased;
+      return { x: centerX(i) - barWidth / 2, y: baselineY - h, w: barWidth, h, baselineY };
+    }
+
     function draw(elapsedMs) {
       if (!size.width) return;
       const ctx = canvas.getContext("2d");
       ctx.clearRect(0, 0, size.width, size.height);
-      const { padding, plotW, plotH, barWidth, centerX } = layout();
+      const { padding, plotW, plotH, centerX } = layout();
 
       drawAxes(ctx, {
         padding,
@@ -376,21 +434,26 @@ function BarChartCanvas({ config, lang, section }) {
         axisColor,
         fontFamily,
         axisXTitle,
-        axisYTitle,
       });
 
-      const baselineY = padding.top + plotH;
-
       values.forEach((v, i) => {
-        const delay = i * STAGGER_MS;
-        const raw = Math.min(Math.max((elapsedMs - delay) / BAR_DURATION_MS, 0), 1);
-        const eased = easeInOutQuart(raw);
-        const fullHeight = (plotH * v) / yMax;
-        const h = fullHeight * eased;
+        const { x, y, w, h } = barRect(i, elapsedMs);
         if (h <= 0) return;
         ctx.fillStyle = colors[i % colors.length];
-        roundRectTop(ctx, centerX(i) - barWidth / 2, baselineY - h, barWidth, h, 3);
+        roundRectTop(ctx, x, y, w, h, 4);
         ctx.fill();
+
+        if (h > 28 && labels[i]) {
+          ctx.save();
+          ctx.translate(x + w / 2, y + h - 8);
+          ctx.rotate(-Math.PI / 2);
+          ctx.fillStyle = "rgba(10,10,10,0.55)";
+          ctx.font = `8px ${fontFamily}`;
+          ctx.textAlign = "left";
+          ctx.textBaseline = "middle";
+          ctx.fillText(labels[i], 0, 0);
+          ctx.restore();
+        }
       });
     }
 
@@ -429,6 +492,32 @@ function BarChartCanvas({ config, lang, section }) {
       draw(lastElapsed);
     }
 
+    function handleMouseMove(e) {
+      if (!tooltip) return;
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      let hit = null;
+      values.forEach((v, i) => {
+        const { x, y, w, baselineY } = barRect(i, lastElapsed);
+        if (mx >= x && mx <= x + w && my >= y && my <= baselineY) {
+          hit = { x: x + w / 2, y, v };
+        }
+      });
+      if (hit) {
+        tooltip.style.opacity = "1";
+        tooltip.style.left = `${hit.x}px`;
+        tooltip.style.top = `${hit.y}px`;
+        tooltip.textContent = String(hit.v);
+      } else {
+        tooltip.style.opacity = "0";
+      }
+    }
+
+    function handleMouseLeave() {
+      if (tooltip) tooltip.style.opacity = "0";
+    }
+
     resize();
 
     const resizeObserver = new ResizeObserver(resize);
@@ -446,17 +535,30 @@ function BarChartCanvas({ config, lang, section }) {
     );
     intersectionObserver.observe(wrap);
 
+    canvas.addEventListener("mousemove", handleMouseMove);
+    canvas.addEventListener("mouseleave", handleMouseLeave);
+
     return () => {
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
+      canvas.removeEventListener("mousemove", handleMouseMove);
+      canvas.removeEventListener("mouseleave", handleMouseLeave);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [config, lang, section]);
+  }, [config, lang]);
 
   return (
-    <div ref={wrapRef} style={{ width: "100%", height: `${CHART_HEIGHT}px` }}>
-      <canvas ref={canvasRef} style={{ width: "100%", height: `${CHART_HEIGHT}px`, display: "block" }} />
+    <div className="chart-canvas-outer" style={{ height: `${CHART_HEIGHT}px` }}>
+      <AxisYLabel text={config.axisY?.[lang]} />
+      <div
+        ref={wrapRef}
+        className="chart-canvas-wrap"
+        style={{ marginLeft: `${AXIS_LABEL_WIDTH}px`, height: `${CHART_HEIGHT}px` }}
+      >
+        <canvas ref={canvasRef} style={{ width: "100%", height: `${CHART_HEIGHT}px`, display: "block" }} />
+        <div ref={tooltipRef} className="chart-tooltip" />
+      </div>
     </div>
   );
 }
@@ -472,7 +574,7 @@ function ChartBlock({ section }) {
   let canvas = null;
   if (config && inView) {
     if (config.type === "bar") {
-      canvas = <BarChartCanvas key={theme} config={config} lang={lang} section={section} />;
+      canvas = <BarChartCanvas key={theme} config={config} lang={lang} />;
     } else if (config.type === "line") {
       canvas = <LineChartCanvas key={theme} config={config} lang={lang} t={t} />;
     }

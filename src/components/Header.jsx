@@ -20,7 +20,7 @@ function Header() {
           <span className="brand-serif">Skin</span>
           <span className="brand-reg">Science</span>
         </div>
-        <div className="brand-sub">Research &amp; Evidence</div>
+        <div className="brand-sub">Research & Evidence</div>
       </div>
 
       <div className="header-right">
