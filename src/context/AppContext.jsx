@@ -17,6 +17,7 @@ export function AppProvider({ children }) {
   }, [theme]);
 
   useEffect(() => {
+    document.documentElement.setAttribute("lang", lang);
     localStorage.setItem("lang", lang);
   }, [lang]);
 

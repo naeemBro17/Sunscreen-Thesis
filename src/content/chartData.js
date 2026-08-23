@@ -1,23 +1,29 @@
 export const chartData = {
   "s3.c1": {
     type: "bar",
+    variant: "value",
     labels: { bn: ["০.৪", "০.৭৫", "১.০", "১.৫", "২.০"], en: ["0.4", "0.75", "1.0", "1.5", "2.0"] },
     values: [3, 6, 9, 18, 50],
+    unit: { bn: "SPF", en: "SPF" },
     axisX: { bn: "মিলিগ্রাম / বর্গ সেন্টিমিটার", en: "mg / cm²" },
     axisY: { bn: "কার্যকর SPF", en: "Effective SPF" },
     yMax: 55,
   },
   "s3.c2": {
     type: "bar",
+    variant: "country",
+    countries: ["australia", "japan", "eu", "korea", "india"],
     labels: {
       bn: ["অস্ট্রেলিয়া", "জাপান", "EU", "কোরিয়া", "ভারত"],
       en: ["Australia", "Japan", "EU", "Korea", "India"],
     },
     values: [240, 80, 80, 20, 0],
+    unit: { bn: "মিনিট", en: "Minutes" },
     axisY: { bn: "মিনিট", en: "Minutes" },
   },
   "s4.uva": {
     type: "line",
+    severity: true,
     labels: { bn: ["০", "৫", "১০", "১৫", "২০"], en: ["0", "5", "10", "15", "20"] },
     datasets: [
       { labelKey: "s4.leg1s", values: [0, 8, 17, 27, 38] },
@@ -30,6 +36,7 @@ export const chartData = {
   },
   "s4.uvb": {
     type: "line",
+    severity: true,
     labels: { bn: ["০", "৫", "১০", "১৫", "২০"], en: ["0", "5", "10", "15", "20"] },
     datasets: [
       { labelKey: "s4.leg1s", values: [0, 5, 11, 18, 26] },

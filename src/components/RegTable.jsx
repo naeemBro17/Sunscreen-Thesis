@@ -2,6 +2,13 @@ import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
 
 const COLS = ["au", "jp", "eu", "kr", "in"];
+const COL_TINT_CLASS = {
+  au: "reg-col-au",
+  jp: "reg-col-jp",
+  eu: "reg-col-eu",
+  kr: "reg-col-kr",
+  in: "reg-col-in",
+};
 const ROWS = [1, 2, 3, 4, 5, 6];
 
 function RegTable({ section }) {
@@ -14,7 +21,7 @@ function RegTable({ section }) {
           <tr>
             <th>{t[`${section}.tbl.criterion`]}</th>
             {COLS.map((col) => (
-              <th key={col}>{t[`${section}.tbl.${col}`]}</th>
+              <th key={col} className={COL_TINT_CLASS[col]}>{t[`${section}.tbl.${col}`]}</th>
             ))}
           </tr>
         </thead>
@@ -25,7 +32,7 @@ function RegTable({ section }) {
               {COLS.map((col) => {
                 const sub = t[`${section}.r${n}.${col}Sub`];
                 return (
-                  <td key={col}>
+                  <td key={col} className={COL_TINT_CLASS[col]}>
                     {t[`${section}.r${n}.${col}`]}
                     {sub && <span className="reg-table-sub">{sub}</span>}
                   </td>

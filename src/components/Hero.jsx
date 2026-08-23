@@ -15,6 +15,7 @@ function Hero() {
   return (
     <section className="hero" ref={heroRef}>
       <motion.div className="hero-photo" style={{ scale }} />
+      <div className="hero-scrim" />
 
       <div className="scroll-side">
         <span className="scroll-side-text">{t["hero.scroll"]}</span>

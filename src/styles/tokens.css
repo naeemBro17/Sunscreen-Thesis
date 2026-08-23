@@ -1,28 +1,54 @@
 :root {
-  /* Backgrounds */
+  /* Base surface colors */
   --bg:         #0A0A0A;
   --bg-panel:   #141414;
   --bg-raised:  #1C1C1C;
 
-  /* Typography */
   --cream:      #F0EBE3;
   --cream-soft: #C8BFB5;
   --cream-mute: #6B6560;
 
-  /* Accent — use sparingly */
   --teal:       #D4A843;
   --teal-deep:  #8B6F47;
   --sand:       #A0452C;
   --sand-deep:  #7A3520;
 
-  /* Lines */
   --line:       rgba(240,235,227,0.08);
   --line-soft:  rgba(240,235,227,0.05);
 
+  /* Country identity colors — used in tables and country-comparison bar charts */
+  --country-australia: #34A853;
+  --country-japan:     #4285F4;
+  --country-eu:        #D4A843;
+  --country-korea:     #FBBC04;
+  --country-india:     #A0452C;
+
+  /* Country table-tint alpha (percentage), single source for RegTable column tints */
+  --tint-australia: 15%;
+  --tint-japan:     15%;
+  --tint-eu:        12%;
+  --tint-korea:     15%;
+  --tint-india:     20%;
+
+  /* Severity colors — used in damage/quality comparison line charts (traffic light) */
+  --severity-low:    #34A853;
+  --severity-medium: #FBBC04;
+  --severity-high:   #EA4335;
+
+  /* Chart gradient endpoints — used in value-based bar chart gradients */
+  --chart-gradient-start: #D4A843;
+  --chart-gradient-end:   #6B5535;
+
+  /* Hero overlay text — sits over the photo + scrim, stays light in both themes */
+  --hero-ink:      #F0EBE3;
+  --hero-ink-soft: #C8BFB5;
+  --hero-ink-mute: #6B6560;
+
   /* Typography scale */
-  --serif: "Cormorant Garamond", Georgia, serif;
-  --mono:  "IBM Plex Mono", monospace;
-  --sans:  "Jost", system-ui, sans-serif;
+  --serif:    "Cormorant Garamond", Georgia, serif;
+  --serif-bn: "Noto Serif Bengali", "Cormorant Garamond", Georgia, serif;
+  --mono:     "IBM Plex Mono", monospace;
+  --sans:     "Jost", system-ui, sans-serif;
 }
 
 [data-theme="light"] {
@@ -38,4 +64,11 @@
   --sand-deep:  #A0452C;
   --line:       rgba(26,21,16,0.10);
   --line-soft:  rgba(26,21,16,0.06);
+
+  /* Country/severity hues stay the same in light mode — only tint alpha drops */
+  --tint-australia: 7%;
+  --tint-japan:     7%;
+  --tint-eu:        6%;
+  --tint-korea:     7%;
+  --tint-india:     10%;
 }

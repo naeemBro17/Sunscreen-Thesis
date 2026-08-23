@@ -20,8 +20,6 @@ const FAILED_CLAIM_STAT = {
   en: "failed to meet their labeled SPF claim",
 };
 
-const QUALITY_DOTS = ["dot-teal", "dot-sand", "dot-sand-deep"];
-
 function Main() {
   const { t, lang } = useContext(AppContext);
 
@@ -43,14 +41,6 @@ function Main() {
         <ChartBlock section="s3.c2" />
       </ChapterBlock>
       <ChapterBlock section="s4">
-        <ul className="quality-legend">
-          {[1, 2, 3].map((n) => (
-            <li key={n}>
-              <span className={`dot ${QUALITY_DOTS[n - 1]}`} />
-              {t[`s4.leg${n}`]}
-            </li>
-          ))}
-        </ul>
         <ChartBlock section="s4.uva" />
         <ChartBlock section="s4.uvb" />
         <p className="chapter-body">{t["s4.note"]}</p>
