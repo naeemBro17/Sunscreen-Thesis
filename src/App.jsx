@@ -12,6 +12,7 @@ import TypeGrid from "./components/TypeGrid";
 import UvCompare from "./components/UvCompare";
 import SourceList from "./components/SourceList";
 import IndiaReview from "./components/IndiaReview";
+import AustraliaReport from "./components/AustraliaReport";
 import Footer from "./components/Footer";
 import ReadingProgress from "./components/ReadingProgress";
 
@@ -57,7 +58,7 @@ function Main() {
       <ChapterBlock section="s7">
         <SourceList section="s7" />
       </ChapterBlock>
-      <ChapterBlock section="s8" />
+      <AustraliaReport section="s8" />
     </main>
   );
 }

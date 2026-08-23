@@ -1,20 +1,20 @@
 :root {
   /* Base surface colors */
-  --bg:         #0A0A0A;
-  --bg-panel:   #141414;
-  --bg-raised:  #1C1C1C;
+  --bg:         #0D0B09;
+  --bg-panel:   #161210;
+  --bg-raised:  #201B16;
 
-  --cream:      #F0EBE3;
-  --cream-soft: #C8BFB5;
-  --cream-mute: #6B6560;
+  --cream:      #F4EFE8;
+  --cream-soft: #CCC2B8;
+  --cream-mute: #7D7268;
 
-  --teal:       #D4A843;
-  --teal-deep:  #8B6F47;
-  --sand:       #A0452C;
-  --sand-deep:  #7A3520;
+  --teal:       #E8A830;
+  --teal-deep:  #9E6F20;
+  --sand:       #C8503A;
+  --sand-deep:  #8C3828;
 
-  --line:       rgba(240,235,227,0.08);
-  --line-soft:  rgba(240,235,227,0.05);
+  --line:       rgba(244,239,232,0.07);
+  --line-soft:  rgba(244,239,232,0.04);
 
   /* Country identity colors — used in tables and country-comparison bar charts */
   --country-australia: #34A853;
@@ -52,18 +52,18 @@
 }
 
 [data-theme="light"] {
-  --bg:         #F7F3ED;
-  --bg-panel:   #EDE8E0;
+  --bg:         #F6F1EA;
+  --bg-panel:   #EDE6DC;
   --bg-raised:  #FFFFFF;
-  --cream:      #1A1510;
-  --cream-soft: #3D3530;
-  --cream-mute: #6B6560;
-  --teal:       #8B6F47;
-  --teal-deep:  #5C4A30;
-  --sand:       #C85A3A;
-  --sand-deep:  #A0452C;
-  --line:       rgba(26,21,16,0.10);
-  --line-soft:  rgba(26,21,16,0.06);
+  --cream:      #18140E;
+  --cream-soft: #3A332A;
+  --cream-mute: #7D7268;
+  --teal:       #9E6F20;
+  --teal-deep:  #6A4A15;
+  --sand:       #A83E2A;
+  --sand-deep:  #7A2D1E;
+  --line:       rgba(24,20,14,0.09);
+  --line-soft:  rgba(24,20,14,0.05);
 
   /* Country/severity hues stay the same in light mode — only tint alpha drops */
   --tint-australia: 7%;

@@ -7,6 +7,11 @@ const CHART_HEIGHT = 280;
 const AXIS_LABEL_WIDTH = 52;
 const BN_DIGITS = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
 const SEVERITY_LABEL_CLASS = ["dot-severity-low", "dot-severity-medium", "dot-severity-high"];
+const AUTO_DEMO_DURATION_MS = 1500;
+const BAR_CHART_HINT = {
+  bn: "বারে চাপ দিন বিস্তারিত দেখতে",
+  en: "Tap a bar for details",
+};
 
 function cssVar(name) {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -469,9 +474,10 @@ function BarChartCanvas({ config, lang }) {
       if (!size.width) return;
       const ctx = canvas.getContext("2d");
       ctx.clearRect(0, 0, size.width, size.height);
+      const valueColor = cssVar("--cream-soft");
 
       values.forEach((v, i) => {
-        const { x, y, w, h, baselineY } = barRect(i, elapsedMs);
+        const { x, y, w, h } = barRect(i, elapsedMs);
         const color = colors[i % colors.length];
         if (h > 0) {
           ctx.fillStyle = color;
@@ -480,6 +486,17 @@ function BarChartCanvas({ config, lang }) {
         }
 
         const label = labels[i];
+        const valueText = localizeNumber(v, lang);
+        const valueY = y - 4;
+
+        ctx.save();
+        ctx.fillStyle = valueColor;
+        ctx.font = `9px ${fontFamily}`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        ctx.fillText(valueText, x + w / 2, valueY);
+        ctx.restore();
+
         if (!label) return;
 
         if (h > 28) {
@@ -493,16 +510,40 @@ function BarChartCanvas({ config, lang }) {
           ctx.fillText(label, 0, 0);
           ctx.restore();
         } else {
-          const labelY = h > 0 ? y - 4 : baselineY - 4;
           ctx.save();
           ctx.fillStyle = color;
           ctx.font = `8px ${fontFamily}`;
           ctx.textAlign = "center";
           ctx.textBaseline = "bottom";
-          ctx.fillText(label, x + w / 2, labelY);
+          ctx.fillText(label, x + w / 2, valueY - 12);
           ctx.restore();
         }
       });
+    }
+
+    let demoTimeoutIds = [];
+
+    function clearDemoTimeouts() {
+      demoTimeoutIds.forEach((id) => clearTimeout(id));
+      demoTimeoutIds = [];
+    }
+
+    function showTooltipFor(i) {
+      if (!tooltip) return;
+      const { x, y, w, baselineY } = barRect(i, lastElapsed);
+      tooltip.style.opacity = "1";
+      tooltip.style.left = `${x + w / 2}px`;
+      tooltip.style.top = `${Math.min(y, baselineY - 4)}px`;
+      tooltip.textContent = formatTooltip(labels[i], localizeNumber(values[i], lang), unit);
+    }
+
+    function runAutoDemo() {
+      if (!tooltip || n === 0) return;
+      showTooltipFor(0);
+      const hideId = setTimeout(() => {
+        if (tooltip) tooltip.style.opacity = "0";
+      }, AUTO_DEMO_DURATION_MS);
+      demoTimeoutIds.push(hideId);
     }
 
     function animate(timestamp) {
@@ -515,11 +556,13 @@ function BarChartCanvas({ config, lang }) {
       } else {
         state = { phase: "done", startTime: 0 };
         rafRef.current = null;
+        runAutoDemo();
       }
     }
 
     function startAnimation() {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      clearDemoTimeouts();
       state = { phase: "draw", startTime: 0 };
       rafRef.current = requestAnimationFrame(animate);
     }
@@ -527,6 +570,8 @@ function BarChartCanvas({ config, lang }) {
     function resetAnimation() {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       rafRef.current = null;
+      clearDemoTimeouts();
+      if (tooltip) tooltip.style.opacity = "0";
       state = { phase: "idle", startTime: 0 };
       lastElapsed = 0;
       draw(0);
@@ -542,6 +587,7 @@ function BarChartCanvas({ config, lang }) {
 
     function handlePointer(e) {
       if (!tooltip) return;
+      clearDemoTimeouts();
       const rect = canvas.getBoundingClientRect();
       const mx = e.clientX - rect.left;
       const my = e.clientY - rect.top;
@@ -595,6 +641,7 @@ function BarChartCanvas({ config, lang }) {
       canvas.removeEventListener("pointerdown", handlePointer);
       canvas.removeEventListener("pointerleave", handlePointerLeave);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      clearDemoTimeouts();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [config, lang]);
@@ -634,6 +681,7 @@ function ChartBlock({ section }) {
       {sub && <p className="chart-sub">{sub}</p>}
       {config && <ChartLegend config={config} t={t} />}
       <div className="chart-placeholder">{config ? canvas : "Chart loads here"}</div>
+      {config?.type === "bar" && <p className="chart-hint">{BAR_CHART_HINT[lang]}</p>}
       {note && <div className="chart-note">{note}</div>}
     </div>
   );

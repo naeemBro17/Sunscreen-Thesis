@@ -205,25 +205,75 @@ export const content = {
   "s7.src12": `First global consensus statement on visible-light photoprotection`,
   "s8.kicker": `Special Report`,
   "s8.title": `Australian Sunscreen — Not Just a Product, a Government Guarantee`,
-  "s8.body": `<p>The words "SPF 50" printed on a sunscreen bottle are only a claim — unless a government stands behind that claim. In Australia's case, a government genuinely does. By law.</p>
-<p>In most countries, sunscreen is a standard cosmetic product. In Australia, any sunscreen with SPF 4 or higher is legally classified as a "Therapeutic Good" — a medicine. Oversight responsibility falls to the Therapeutic Goods Administration (TGA), an independent body under the Department of Health — the same body that approves every drug and vaccine in Australia.</p>
-<h3>Four Mandatory Tests Before Reaching the Market</h3>
-<p>No company can simply sell sunscreen in Australia. The TGA requires every product to pass four separate tests before approval.</p>
-<div class="s8-test"><strong>Test One — SPF Verified on Human Skin</strong><p>This test is not conducted on machines in a laboratory — it is performed directly on human subjects. At least ten volunteers have sunscreen applied at 2mg/cm² across their backs, then are exposed to intense artificial UV through a Solar Simulator. The ratio of how quickly skin reddens without sunscreen versus how long it holds with sunscreen determines the actual SPF. Whatever is printed on the bottle must be demonstrated on human skin to get approval.</p></div>
-<div class="s8-test"><strong>Test Two — Water Resistance Test</strong><p>This is the defining feature of Australian sunscreens. Volunteers enter a swimming pool — with water current — and remain submerged for the claimed duration (2 or 4 hours). Only if protection holds afterward is the "Water Resistant" label permitted. Other countries cap this at 80 minutes. Australia allows claims up to 4 hours. In Bangladesh's humid climate, where sweat is constant, this test is the most reliable real-world performance evidence available.</p></div>
-<div class="s8-test"><strong>Test Three — UVA Protection (Broad Spectrum Test)</strong><p>SPF only measures UVB protection — what causes sunburn. UVA rays, which penetrate deeper and are primarily responsible for melasma and long-term photoaging, are tested separately. Australian rules require sunscreen to block wavelengths beyond 370nm — failing this means no sale.</p></div>
-<div class="s8-test"><strong>Test Four — Heat Stability Test</strong><p>Whether the product degrades under heat or long storage is tested by holding it at 40–50°C for several months. If the cream separates or loses efficacy, it is rejected. This is why Australian sunscreens remain effective in Dhaka's intense heat.</p></div>
-<h3>Government Oversight Continues After Market Entry</h3>
-<p class="s8-highlight">Every approved product carries an ARTG registration number on its bottle — a unique identifier in the government's central database. Factories face regular government inspections. Misleading advertising claims result in license cancellation and major fines. Claims like "100% sun protection" or "no reapplication needed" are legally prohibited in Australia.</p>
-<h3>Cancer Council — Not a Business, a Commitment</h3>
-<p class="s8-cancer-line">The Cancer Council sunscreen you see on shelves is not the product of a commercial cosmetics company. It belongs to a government-supported nonprofit organization. Revenue from sunscreen sales goes substantially toward cancer research and treatment. Buying this product means protecting your own skin while indirectly contributing to a scientific cause.</p>
-<h3>Why Australian Filter Technology Leads</h3>
-<p>The US FDA has approved no new sunscreen filters in 25 years, leaving American formulas dependent on older chemicals. Australia takes the opposite approach — allowing the most modern photostable filters available, including Tinosorb M, Tinosorb S, and Uvinul A Plus. These don't degrade under prolonged sun exposure and don't cause skin irritation.</p>
-<h3>40 Years of National Habit</h3>
-<p>In 1981, the Australian government launched the national "Slip, Slop, Slap" campaign — put on a shirt, apply sunscreen, wear a hat. For over four decades since, an entire nation has been applying sunscreen daily, researching it, and refining formulations. This historical depth of experience is precisely why Australian formulation science is among the most mature in the world.</p>
-<h3>What to Look for on the Bottle</h3>
-<p>Every genuine TGA-approved sunscreen sold in the Australian market carries <span class="s8-aust-id">AUST L — Registration Number</span> on its label. This number can be verified on TGA's official website. When you pick up a bottle of Cancer Council or Hamilton, you can be confident that what's inside was tested in water and on human skin before it reached your hands.</p>
-<div class="s8-cite">Sources: TGA Therapeutic Goods Administration · ABC News Australia · ChemLinked Cosmetic Regulatory Portal · CHOICE Australia · Clayton Utz Legal Analysis · Standard Procedure Australia · SBS Bangla · Nine.com.au Health</div>`,
+  "s8.entry.p1": `The words "SPF 50" printed on a sunscreen bottle are only a claim — unless a government stands behind that claim. In Australia's case, a government genuinely does. By law.`,
+  "s8.entry.p2": `In most countries, sunscreen is a standard cosmetic product. In Australia, any sunscreen with SPF 4 or higher is legally classified as a "Therapeutic Good" — a medicine.`,
+  "s8.legalBadge": `TGA — the same body that approves every drug and vaccine`,
+  "s8.contrast.world.header": `🌍 Rest of the World`,
+  "s8.contrast.au.header": `🇦🇺 Australia`,
+  "s8.contrast.row1.label": `Product Category`,
+  "s8.contrast.row1.world": `Standard Cosmetic`,
+  "s8.contrast.row1.au": `Legally a Medicine`,
+  "s8.contrast.row2.label": `Water Test Limit`,
+  "s8.contrast.row2.world": `Max 80 Minutes`,
+  "s8.contrast.row2.au": `Up to 4 Hours`,
+  "s8.contrast.row3.label": `SPF Verification`,
+  "s8.contrast.row3.world": `Company Self-Tested`,
+  "s8.contrast.row3.au": `Government Regulated`,
+  "s8.contrast.row4.label": `Advertising Control`,
+  "s8.contrast.row4.world": `Weak or Absent`,
+  "s8.contrast.row4.au": `False Claims Legally Banned`,
+  "s8.tests.heading": `Four Mandatory Tests Before Reaching the Market`,
+  "s8.tests.intro": `No company can simply sell sunscreen in Australia. The TGA requires every product to pass four separate tests before approval.`,
+  "s8.test1.title": `SPF Verified Directly on Human Skin`,
+  "s8.test1.summary": `Not on a machine — on human backs`,
+  "s8.test1.body": `This test is not conducted on machines in a laboratory — it is performed directly on human subjects. At least ten volunteers have sunscreen applied at 2mg/cm² across their backs, then are exposed to intense artificial UV through a Solar Simulator. The ratio of how quickly skin reddens without sunscreen versus how long it holds with sunscreen determines the actual SPF. Whatever is printed on the bottle must be demonstrated on human skin to get approval.`,
+  "s8.test2.title": `Water Resistance Test`,
+  "s8.test2.summary": `Survives Dhaka's sweat — up to 4 hours`,
+  "s8.test2.body": `This is the defining feature of Australian sunscreens. Volunteers enter a swimming pool — with water current — and remain submerged for the claimed duration (2 or 4 hours). Only if protection holds afterward is the "Water Resistant" label permitted.`,
+  "s8.test2.stat.number": `4`,
+  "s8.test2.stat.label": `hours in water — Australia's maximum limit`,
+  "s8.test2.stat.compare": `Other countries' maximum: 80 minutes`,
+  "s8.test2.closing": `In Bangladesh's humid climate, where sweat is constant, this test is the most reliable real-world performance evidence available.`,
+  "s8.test3.title": `UVA Protection (Broad Spectrum Test)`,
+  "s8.test3.summary": `Blocks sunburn — and melasma too`,
+  "s8.test3.body": `SPF only measures UVB protection — what causes sunburn. UVA rays, which penetrate deeper and are primarily responsible for melasma and long-term photoaging, are tested separately. Australian rules require sunscreen to block wavelengths beyond 370nm — failing this means no sale.`,
+  "s8.test4.title": `Heat Stability Test`,
+  "s8.test4.summary": `Stable at 50°C — handles Dhaka's heat`,
+  "s8.test4.body": `Whether the product degrades under heat or long storage is tested by holding it at 40–50°C for several months. If the cream separates or loses efficacy, it is rejected. This is why Australian sunscreens remain effective in Dhaka's intense heat.`,
+  "s8.surveillance.heading": `Government Oversight Continues After Market Entry`,
+  "s8.surveillance.body": `Every approved company remains under regular government surveillance even after approval. Factories face regular government inspections. Misleading advertising claims result in license cancellation and major fines.`,
+  "s8.surveillance.prohibited.claims": `❌ "100% Sun Protection" · "No Reapplication Needed"`,
+  "s8.surveillance.prohibited.note": `— These kinds of misleading claims are legally prohibited in Australia`,
+  "s8.artg.label": `What to Look for on the Bottle`,
+  "s8.artg.number": `AUST L — XXXXXXXX`,
+  "s8.artg.explain": `Every approved product carries an ARTG number on its bottle — a unique identifier registered in the government's central database. It's proof the product reached you not just from a factory, but with government approval.`,
+  "s8.artg.link": `Verify on the TGA website ↗`,
+  "s8.cc.heading": `Cancer Council — Not a Business, a Commitment`,
+  "s8.cc.body": `The familiar Cancer Council sunscreen is not the product of a commercial cosmetics company. It belongs to a government-supported nonprofit organization. A substantial share of revenue from these sales goes directly toward cancer research and treatment.`,
+  "s8.cc.quote": `Buying this product means protecting your own skin while indirectly contributing to a scientific cause.`,
+  "s8.usaaus.heading": `Why Australian Filter Technology Leads Over America's`,
+  "s8.usaaus.us.header": `🇺🇸 United States (FDA)`,
+  "s8.usaaus.us.item1": `No new filter approvals in 25 years`,
+  "s8.usaaus.us.item2": `Forced to rely on older chemicals`,
+  "s8.usaaus.us.item3": `Tinosorb, Uvinul not approved`,
+  "s8.usaaus.au.header": `🇦🇺 Australia (TGA)`,
+  "s8.usaaus.au.item1": `Updated in step with Europe`,
+  "s8.usaaus.au.item2": `Most modern photostable filters approved`,
+  "s8.usaaus.au.item3": `Tinosorb M, Tinosorb S, Uvinul A Plus ✓`,
+  "s8.timeline.heading": `40 Years of National Habit`,
+  "s8.timeline.item1.dot": `1981`,
+  "s8.timeline.item1.title": `"Slip, Slop, Slap" campaign begins`,
+  "s8.timeline.item1.body": `Put on a shirt, apply sunscreen, wear a hat — the birth of a national awareness movement.`,
+  "s8.timeline.item2.dot": `40+`,
+  "s8.timeline.item2.title": `Four decades of research and refinement`,
+  "s8.timeline.item2.body": `An entire nation applies sunscreen daily, researches it, and refines formulations.`,
+  "s8.timeline.item3.dot": `Today`,
+  "s8.timeline.item3.title": `The world's most mature formulation science`,
+  "s8.timeline.item3.body": `This historical depth of experience is precisely why Australian formulation science is among the most mature in the world.`,
+  "s8.bottle.heading": `What to Look for When You Buy a Bottle`,
+  "s8.bottle.body": `Genuine TGA-approved sunscreen sold in the Australian market carries a small AUST L — Registration Number on its label. This number can be verified on TGA's official website.`,
+  "s8.bottle.closing": `When you pick up a bottle of Cancer Council or Hamilton, you can be confident that what's inside was tested in water and on human skin before it reached your hands.`,
+  "s8.citation": `Sources: TGA Therapeutic Goods Administration · ABC News Australia · ChemLinked Cosmetic Regulatory Portal · CHOICE Australia · Clayton Utz Legal Analysis · Standard Procedure Australia · Mukti Organics Research · SBS Bangla · Nine.com.au Health`,
   "foot.brand": `Sunscreen Research`,
   "foot.tag": `Independent, science-based photoprotection education. No advertising, no paid partnerships.`,
   "foot.discLabel": `Disclaimer`,
