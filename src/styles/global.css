@@ -602,3 +602,111 @@ a {
 @media (max-width: 560px) {
   .au-contrast, .au-compare-grid { grid-template-columns: 1fr; }
 }
+
+/* ---------- Two Futures: Naeema & Mim expandable example (s4b) ---------- */
+.two-futures { padding-top: 40px; padding-bottom: 40px; }
+
+.tf-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; width: 100%;
+  border: 1px solid var(--teal);
+  background: transparent;
+  color: var(--teal);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  padding: 16px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.tf-toggle:hover { opacity: 0.8; }
+.tf-toggle-arrow { display: inline-block; transition: transform 0.3s ease; }
+.tf-toggle.open .tf-toggle-arrow { transform: rotate(180deg); }
+
+.tf-panel { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+.tf-panel.open { max-height: 20000px; overflow: visible; }
+.tf-panel-inner { padding-top: 24px; }
+
+.tf-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.tf-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 20px;
+}
+.tf-card-name { font-family: var(--serif); font-size: 18px; font-weight: 600; margin-bottom: 12px; }
+.tf-card--a .tf-card-name { color: var(--teal); }
+.tf-card--b .tf-card-name { color: var(--sand); }
+.tf-card-detail { font-family: var(--mono); font-size: 11.5px; line-height: 1.9; color: var(--cream-soft); }
+
+.tf-cards-intro {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--cream-soft);
+  text-align: center;
+  margin-top: 20px;
+  white-space: pre-line;
+  line-height: 1.6;
+}
+
+.tf-scrollchart { position: relative; height: 600vh; }
+.tf-scrollchart-sticky { position: absolute; top: 0; left: 0; width: 100%; }
+.tf-chart-canvas-wrap { position: relative; width: 100%; height: 60vh; }
+
+.tf-gap-indicator { margin-top: 18px; }
+.tf-gap-label {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--cream-mute); margin-bottom: 6px;
+}
+.tf-gap-track { height: 6px; background: var(--bg-panel); border-radius: 3px; overflow: hidden; }
+.tf-gap-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--teal), var(--sand)); }
+
+.tf-stage-text { margin-top: 20px; }
+.tf-stage-heading { font-family: var(--serif); font-size: 22px; font-weight: 500; color: var(--cream); margin-bottom: 8px; }
+.tf-stage-body { font-family: var(--serif-bn); font-size: 16px; line-height: 1.7; color: var(--cream-soft); }
+.tf-stage-source { font-family: var(--mono); font-size: 11px; color: var(--cream-mute); margin-top: 8px; }
+
+.tf-assumptions {
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 24px;
+  margin-top: 40px;
+}
+.tf-assumptions h3 { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--cream); margin-bottom: 14px; }
+.tf-assumptions ul { list-style: none; }
+.tf-assumptions li {
+  font-family: var(--mono); font-size: 13px; line-height: 1.9; color: var(--cream-mute);
+  padding-left: 16px; position: relative;
+}
+.tf-assumptions li::before { content: "—"; position: absolute; left: 0; }
+
+.tf-disclaimer {
+  border-left: 3px solid var(--teal);
+  background: var(--bg-raised);
+  padding: 20px 24px;
+  margin-top: 24px;
+  border-radius: 0 4px 4px 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--cream-soft);
+}
+
+.tf-sources {
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.8;
+  color: var(--cream-mute);
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+  margin-top: 24px;
+}
+
+@media (max-width: 560px) {
+  .tf-cards { grid-template-columns: 1fr; }
+}

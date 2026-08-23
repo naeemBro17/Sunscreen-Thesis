@@ -13,6 +13,7 @@ import UvCompare from "./components/UvCompare";
 import SourceList from "./components/SourceList";
 import IndiaReview from "./components/IndiaReview";
 import AustraliaReport from "./components/AustraliaReport";
+import TwoFutures from "./components/TwoFutures";
 import Footer from "./components/Footer";
 import ReadingProgress from "./components/ReadingProgress";
 
@@ -47,6 +48,7 @@ function Main() {
         <p className="chapter-body">{t["s4.note"]}</p>
         <UvCompare section="s4.uv" />
       </ChapterBlock>
+      <TwoFutures />
       <ChapterBlock section="s5">
         <Cards section="s5" count={3} />
       </ChapterBlock>
