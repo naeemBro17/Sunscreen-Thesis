@@ -4,12 +4,13 @@ import chartData from "../content/chartData";
 import useInViewOnce from "../hooks/useInViewOnce";
 
 const CHART_HEIGHT = 280;
-
-// Explicit per-bar palettes for known bar charts, so every bar/country gets
-// a distinct color instead of a teal->sand gradient.
-const BAR_COLORS = {
-  "s3.c2": ["#4A9B94", "#C9B79C", "#7B9E87", "#9B7B9E", "#9E7B7B"],
-  "s3.c1": ["#4A9B94", "#7B9E87", "#C9B79C", "#9B8B6E", "#2C6B66"],
+const AXIS_LABEL_WIDTH = 52;
+const BN_DIGITS = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
+const SEVERITY_LABEL_CLASS = ["dot-severity-low", "dot-severity-medium", "dot-severity-high"];
+const AUTO_DEMO_DURATION_MS = 1500;
+const BAR_CHART_HINT = {
+  bn: "বারে চাপ দিন বিস্তারিত দেখতে",
+  en: "Tap a bar for details",
 };
 
 function cssVar(name) {
@@ -28,15 +29,33 @@ function rgbaFromHex(hex, alpha) {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
-function gradientColors(hexA, hexB, count) {
+function mixHex(hexA, hexB, t) {
   const a = hexToRgb(hexA);
   const b = hexToRgb(hexB);
-  return Array.from({ length: count }, (_, i) => {
-    const step = count === 1 ? 0 : i / (count - 1);
-    const r = Math.round(a.r + (b.r - a.r) * step);
-    const g = Math.round(a.g + (b.g - a.g) * step);
-    const bl = Math.round(a.b + (b.b - a.b) * step);
-    return `rgb(${r},${g},${bl})`;
+  const r = Math.round(a.r + (b.r - a.r) * t);
+  const g = Math.round(a.g + (b.g - a.g) * t);
+  const bl = Math.round(a.b + (b.b - a.b) * t);
+  return `rgb(${r},${g},${bl})`;
+}
+
+function localizeNumber(value, lang) {
+  const str = String(value);
+  if (lang !== "bn") return str;
+  return str.replace(/[0-9]/g, (d) => BN_DIGITS[Number(d)]);
+}
+
+function formatTooltip(label, value, unit) {
+  const text = `${label} — ${value}`;
+  return unit ? `${text} ${unit}` : text;
+}
+
+function valueGradientColors(values, gradEnd, gradStart) {
+  const max = Math.max(...values);
+  const min = Math.min(...values);
+  const span = max - min;
+  return values.map((v) => {
+    const t = span === 0 ? 1 : (v - min) / span;
+    return mixHex(gradEnd, gradStart, t);
   });
 }
 
@@ -78,80 +97,60 @@ function roundRectTop(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
-function drawAxes(ctx, { padding, plotW, plotH, canvasHeight, yMax, xTicks, tickColor, gridColor, axisColor, fontFamily, axisXTitle, axisYTitle }) {
-  const tickCount = 4;
-  ctx.font = `9px ${fontFamily}`;
-  ctx.lineWidth = 1;
-
-  for (let i = 0; i <= tickCount; i += 1) {
-    const v = (yMax * i) / tickCount;
-    const y = padding.top + plotH - (plotH * v) / yMax;
-    ctx.strokeStyle = gridColor;
-    ctx.beginPath();
-    ctx.moveTo(padding.left, y);
-    ctx.lineTo(padding.left + plotW, y);
-    ctx.stroke();
-    ctx.fillStyle = tickColor;
-    ctx.textAlign = "right";
-    ctx.textBaseline = "middle";
-    ctx.fillText(String(Math.round(v)), padding.left - 8, y);
-  }
-
-  ctx.strokeStyle = axisColor;
-  ctx.beginPath();
-  ctx.moveTo(padding.left, padding.top);
-  ctx.lineTo(padding.left, padding.top + plotH);
-  ctx.lineTo(padding.left + plotW, padding.top + plotH);
-  ctx.stroke();
-
-  ctx.fillStyle = tickColor;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "top";
-  xTicks.forEach(({ x, label }) => ctx.fillText(label, x, padding.top + plotH + 8));
-
-  if (axisYTitle) {
-    ctx.save();
-    ctx.translate(10, padding.top + plotH / 2);
-    ctx.rotate(-Math.PI / 2);
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = tickColor;
-    ctx.fillText(axisYTitle, 0, 0);
-    ctx.restore();
-  }
-  if (axisXTitle) {
-    ctx.textAlign = "center";
-    ctx.textBaseline = "bottom";
-    ctx.fillStyle = tickColor;
-    ctx.fillText(axisXTitle, padding.left + plotW / 2, canvasHeight - 2);
-  }
+function AxisYLabel({ text }) {
+  if (!text) return null;
+  return (
+    <div className="chart-axis-y-label">
+      <span>{text}</span>
+    </div>
+  );
 }
 
-function LineChartCanvas({ config, lang, t }) {
+function ChartLegend({ config, t }) {
+  if (!config.severity) return null;
+  return (
+    <ul className="chart-legend">
+      {config.datasets.map((ds, i) => (
+        <li key={ds.labelKey}>
+          <span className={`dot ${SEVERITY_LABEL_CLASS[i % SEVERITY_LABEL_CLASS.length]}`} />
+          {t[ds.labelKey]}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function LineChartCanvas({ config, lang, theme }) {
   const wrapRef = useRef(null);
   const canvasRef = useRef(null);
+  const tooltipRef = useRef(null);
   const rafRef = useRef(null);
 
   useEffect(() => {
     const wrap = wrapRef.current;
     const canvas = canvasRef.current;
+    const tooltip = tooltipRef.current;
     if (!wrap || !canvas) return undefined;
 
+    const isSeverity = !!config.severity;
     const tickColor = cssVar("--cream-mute");
-    const gridColor = rgbaFromHex(cssVar("--cream"), 0.08);
+    const gridColor = isSeverity
+      ? (theme === "light" ? "rgba(26,21,16,0.08)" : "rgba(255,255,255,0.08)")
+      : rgbaFromHex(cssVar("--cream"), 0.08);
     const axisColor = rgbaFromHex(cssVar("--cream"), 0.2);
     const fontFamily = cssVar("--mono");
-    const seriesColors = [cssVar("--teal"), cssVar("--sand"), cssVar("--sand-deep")];
+    const seriesColors = isSeverity
+      ? [cssVar("--severity-low"), cssVar("--severity-medium"), cssVar("--severity-high")]
+      : [cssVar("--teal"), cssVar("--cream-soft"), cssVar("--teal-deep")];
     const labels = config.labels[lang];
     const n = labels.length;
     const yMax = config.yMax ?? niceMax(Math.max(...config.datasets.flatMap((d) => d.values)));
     const axisXTitle = config.axisX?.[lang];
-    const axisYTitle = config.axisY?.[lang];
+    const totalDuration = isSeverity ? 4400 : 2500;
 
     let size = { width: 0, height: CHART_HEIGHT };
     let state = { phase: "idle", startTime: 0 };
-    let lastProgress = 0;
-    let lastPulse = null;
+    let lastElapsed = 0;
 
     function layout() {
       const padding = { top: 16, right: 16, bottom: 30, left: 34 };
@@ -162,52 +161,72 @@ function LineChartCanvas({ config, lang, t }) {
       return { padding, plotW, plotH, xAt, yAt };
     }
 
-    function draw(progress, pulseT) {
-      if (!size.width) return;
-      const ctx = canvas.getContext("2d");
-      ctx.clearRect(0, 0, size.width, size.height);
-      const { padding, plotW, plotH, xAt, yAt } = layout();
+    function drawGrid(ctx) {
+      const { padding, plotW, plotH, xAt } = layout();
+      const tickCount = 4;
+      ctx.font = `9px ${fontFamily}`;
+      ctx.lineWidth = 1;
 
-      drawAxes(ctx, {
-        padding,
-        plotW,
-        plotH,
-        canvasHeight: size.height,
-        yMax,
-        xTicks: labels.map((label, i) => ({ x: xAt(i), label })),
-        tickColor,
-        gridColor,
-        axisColor,
-        fontFamily,
-        axisXTitle,
-        axisYTitle,
-      });
-
-      const totalSegments = n - 1;
-      const exactPos = progress * totalSegments;
-
-      config.datasets.forEach((ds, si) => {
-        const color = seriesColors[si % seriesColors.length];
-        const { values } = ds;
-
+      for (let i = 0; i <= tickCount; i += 1) {
+        const v = (yMax * i) / tickCount;
+        const y = padding.top + plotH - (plotH * v) / yMax;
+        ctx.strokeStyle = gridColor;
         ctx.beginPath();
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 1.5;
-        ctx.lineCap = "round";
-        ctx.lineJoin = "round";
-        ctx.moveTo(xAt(0), yAt(values[0]));
-        for (let i = 1; i < n; i += 1) {
-          if (exactPos >= i) {
-            ctx.lineTo(xAt(i), yAt(values[i]));
-          } else if (exactPos > i - 1) {
-            const segT = exactPos - (i - 1);
-            const x = xAt(i - 1) + (xAt(i) - xAt(i - 1)) * segT;
-            const y = yAt(values[i - 1]) + (yAt(values[i]) - yAt(values[i - 1])) * segT;
-            ctx.lineTo(x, y);
-          }
-        }
+        ctx.moveTo(padding.left, y);
+        ctx.lineTo(padding.left + plotW, y);
         ctx.stroke();
+        ctx.fillStyle = tickColor;
+        ctx.textAlign = "right";
+        ctx.textBaseline = "middle";
+        ctx.fillText(String(Math.round(v)), padding.left - 8, y);
+      }
 
+      if (!isSeverity) {
+        ctx.strokeStyle = axisColor;
+        ctx.beginPath();
+        ctx.moveTo(padding.left, padding.top);
+        ctx.lineTo(padding.left, padding.top + plotH);
+        ctx.lineTo(padding.left + plotW, padding.top + plotH);
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = tickColor;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      labels.forEach((label, i) => ctx.fillText(label, xAt(i), padding.top + plotH + 8));
+
+      if (axisXTitle) {
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        ctx.fillStyle = tickColor;
+        ctx.fillText(axisXTitle, padding.left + plotW / 2, size.height - 2);
+      }
+    }
+
+    function drawLine(ctx, values, color, exactPos, glowBlur, withDots) {
+      const { xAt, yAt } = layout();
+      ctx.beginPath();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = isSeverity ? 2 : 2.5;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.shadowColor = glowBlur > 0 ? color : "transparent";
+      ctx.shadowBlur = glowBlur;
+      ctx.moveTo(xAt(0), yAt(values[0]));
+      for (let i = 1; i < n; i += 1) {
+        if (exactPos >= i) {
+          ctx.lineTo(xAt(i), yAt(values[i]));
+        } else if (exactPos > i - 1) {
+          const segT = exactPos - (i - 1);
+          const x = xAt(i - 1) + (xAt(i) - xAt(i - 1)) * segT;
+          const y = yAt(values[i - 1]) + (yAt(values[i]) - yAt(values[i - 1])) * segT;
+          ctx.lineTo(x, y);
+        }
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      if (withDots) {
         for (let i = 0; i < n; i += 1) {
           if (exactPos >= i - 0.001) {
             ctx.beginPath();
@@ -216,15 +235,52 @@ function LineChartCanvas({ config, lang, t }) {
             ctx.fill();
           }
         }
+      }
+    }
 
+    function drawSeverity(ctx, elapsedMs) {
+      const totalSegments = n - 1;
+
+      const lowMedRaw = Math.min(elapsedMs / 1000, 1);
+      const lowMedEased = easeInOutCubic(lowMedRaw);
+      const lowMedPos = lowMedEased * totalSegments;
+      drawLine(ctx, config.datasets[0].values, seriesColors[0], lowMedPos, 0, false);
+      drawLine(ctx, config.datasets[1].values, seriesColors[1], lowMedPos, 0, false);
+
+      const redRaw = Math.min(Math.max((elapsedMs - 1000) / 1000, 0), 1);
+      const redEased = easeInOutCubic(redRaw);
+      const redPos = redEased * totalSegments;
+
+      let glowBlur = 0;
+      const pulseElapsed = elapsedMs - 2000;
+      if (pulseElapsed >= 0 && pulseElapsed < 2400) {
+        const pulseIndex = Math.min(Math.floor(pulseElapsed / 800), 2);
+        const pulseLocal = (pulseElapsed - pulseIndex * 800) / 800;
+        glowBlur = Math.sin(Math.min(Math.max(pulseLocal, 0), 1) * Math.PI) * 8;
+      }
+      drawLine(ctx, config.datasets[2].values, seriesColors[2], redPos, glowBlur, false);
+    }
+
+    function drawLegacy(ctx, elapsedMs) {
+      const totalSegments = n - 1;
+      const drawRaw = Math.min(elapsedMs / 2000, 1);
+      const drawEased = easeInOutCubic(drawRaw);
+      const exactPos = drawEased * totalSegments;
+      const pulseRaw = Math.min(Math.max((elapsedMs - 2000) / 500, 0), 1);
+      const pulseT = elapsedMs > 2000 ? pulseRaw : null;
+
+      config.datasets.forEach((ds, si) => {
+        const color = seriesColors[si % seriesColors.length];
+        drawLine(ctx, ds.values, color, exactPos, 0, true);
         if (pulseT != null) {
           const bump = Math.sin(pulseT * Math.PI);
+          const { xAt, yAt } = layout();
           ctx.globalAlpha = bump * 0.7;
           ctx.strokeStyle = color;
           ctx.lineWidth = 1.5;
           for (let i = 0; i < n; i += 1) {
             ctx.beginPath();
-            ctx.arc(xAt(i), yAt(values[i]), 3 + bump * 4, 0, Math.PI * 2);
+            ctx.arc(xAt(i), yAt(ds.values[i]), 3 + bump * 4, 0, Math.PI * 2);
             ctx.stroke();
           }
           ctx.globalAlpha = 1;
@@ -232,166 +288,16 @@ function LineChartCanvas({ config, lang, t }) {
       });
     }
 
-    function animate(timestamp) {
-      if (state.phase === "draw") {
-        if (!state.startTime) state.startTime = timestamp;
-        const raw = Math.min((timestamp - state.startTime) / 2000, 1);
-        const eased = easeInOutCubic(raw);
-        lastProgress = eased;
-        draw(eased, null);
-        if (raw < 1) {
-          rafRef.current = requestAnimationFrame(animate);
-        } else {
-          state = { phase: "pulse", startTime: timestamp };
-          rafRef.current = requestAnimationFrame(animate);
-        }
-      } else if (state.phase === "pulse") {
-        const raw = Math.min((timestamp - state.startTime) / 500, 1);
-        lastPulse = raw;
-        draw(1, raw);
-        if (raw < 1) {
-          rafRef.current = requestAnimationFrame(animate);
-        } else {
-          state = { phase: "done", startTime: 0 };
-          lastPulse = null;
-          draw(1, null);
-          rafRef.current = null;
-        }
-      }
-    }
-
-    function startAnimation() {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      state = { phase: "draw", startTime: 0 };
-      lastPulse = null;
-      rafRef.current = requestAnimationFrame(animate);
-    }
-
-    function resetAnimation() {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
-      state = { phase: "idle", startTime: 0 };
-      lastProgress = 0;
-      lastPulse = null;
-      draw(0, null);
-    }
-
-    function resize() {
-      const cssWidth = wrap.clientWidth;
-      if (!cssWidth) return;
-      setupCanvasDPR(canvas, cssWidth, CHART_HEIGHT);
-      size = { width: cssWidth, height: CHART_HEIGHT };
-      draw(lastProgress, lastPulse);
-    }
-
-    resize();
-
-    const resizeObserver = new ResizeObserver(resize);
-    resizeObserver.observe(wrap);
-
-    const intersectionObserver = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          startAnimation();
-        } else {
-          resetAnimation();
-        }
-      },
-      { threshold: 0.2 }
-    );
-    intersectionObserver.observe(wrap);
-
-    return () => {
-      resizeObserver.disconnect();
-      intersectionObserver.disconnect();
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [config, lang, t]);
-
-  return (
-    <div ref={wrapRef} style={{ width: "100%", height: `${CHART_HEIGHT}px` }}>
-      <canvas ref={canvasRef} style={{ width: "100%", height: `${CHART_HEIGHT}px`, display: "block" }} />
-    </div>
-  );
-}
-
-function BarChartCanvas({ config, lang, section }) {
-  const wrapRef = useRef(null);
-  const canvasRef = useRef(null);
-  const rafRef = useRef(null);
-
-  useEffect(() => {
-    const wrap = wrapRef.current;
-    const canvas = canvasRef.current;
-    if (!wrap || !canvas) return undefined;
-
-    const tickColor = cssVar("--cream-mute");
-    const gridColor = rgbaFromHex(cssVar("--cream"), 0.08);
-    const axisColor = rgbaFromHex(cssVar("--cream"), 0.2);
-    const fontFamily = cssVar("--mono");
-    const teal = cssVar("--teal");
-    const sandDeep = cssVar("--sand-deep");
-    const labels = config.labels[lang];
-    const { values } = config;
-    const n = values.length;
-    const colors = BAR_COLORS[section] ?? gradientColors(sandDeep, teal, n);
-    const yMax = config.yMax ?? niceMax(Math.max(...values));
-    const axisXTitle = config.axisX?.[lang];
-    const axisYTitle = config.axisY?.[lang];
-
-    const STAGGER_MS = 80;
-    const BAR_DURATION_MS = 1200;
-    const totalDuration = (n - 1) * STAGGER_MS + BAR_DURATION_MS;
-
-    let size = { width: 0, height: CHART_HEIGHT };
-    let state = { phase: "idle", startTime: 0 };
-    let lastElapsed = 0;
-
-    function layout() {
-      const padding = { top: 16, right: 16, bottom: 30, left: 34 };
-      const plotW = size.width - padding.left - padding.right;
-      const plotH = size.height - padding.top - padding.bottom;
-      const slot = plotW / n;
-      const barWidth = Math.min(56, slot * 0.6);
-      const centerX = (i) => padding.left + slot * (i + 0.5);
-      return { padding, plotW, plotH, barWidth, centerX };
-    }
-
     function draw(elapsedMs) {
       if (!size.width) return;
       const ctx = canvas.getContext("2d");
       ctx.clearRect(0, 0, size.width, size.height);
-      const { padding, plotW, plotH, barWidth, centerX } = layout();
-
-      drawAxes(ctx, {
-        padding,
-        plotW,
-        plotH,
-        canvasHeight: size.height,
-        yMax,
-        xTicks: labels.map((label, i) => ({ x: centerX(i), label })),
-        tickColor,
-        gridColor,
-        axisColor,
-        fontFamily,
-        axisXTitle,
-        axisYTitle,
-      });
-
-      const baselineY = padding.top + plotH;
-
-      values.forEach((v, i) => {
-        const delay = i * STAGGER_MS;
-        const raw = Math.min(Math.max((elapsedMs - delay) / BAR_DURATION_MS, 0), 1);
-        const eased = easeInOutQuart(raw);
-        const fullHeight = (plotH * v) / yMax;
-        const h = fullHeight * eased;
-        if (h <= 0) return;
-        ctx.fillStyle = colors[i % colors.length];
-        roundRectTop(ctx, centerX(i) - barWidth / 2, baselineY - h, barWidth, h, 3);
-        ctx.fill();
-      });
+      drawGrid(ctx);
+      if (isSeverity) {
+        drawSeverity(ctx, elapsedMs);
+      } else {
+        drawLegacy(ctx, elapsedMs);
+      }
     }
 
     function animate(timestamp) {
@@ -429,6 +335,42 @@ function BarChartCanvas({ config, lang, section }) {
       draw(lastElapsed);
     }
 
+    function nearestPoint(mx, my) {
+      const { xAt, yAt } = layout();
+      let best = null;
+      let bestDist = 16;
+      config.datasets.forEach((ds) => {
+        ds.values.forEach((v, i) => {
+          const dist = Math.hypot(xAt(i) - mx, yAt(v) - my);
+          if (dist < bestDist) {
+            bestDist = dist;
+            best = { x: xAt(i), y: yAt(v), xLabel: labels[i], v };
+          }
+        });
+      });
+      return best;
+    }
+
+    function handlePointer(e) {
+      if (!tooltip) return;
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      const best = nearestPoint(mx, my);
+      if (best) {
+        tooltip.style.opacity = "1";
+        tooltip.style.left = `${best.x}px`;
+        tooltip.style.top = `${best.y}px`;
+        tooltip.textContent = `${best.xLabel} — ${localizeNumber(best.v, lang)}`;
+      } else {
+        tooltip.style.opacity = "0";
+      }
+    }
+
+    function handlePointerLeave() {
+      if (tooltip) tooltip.style.opacity = "0";
+    }
+
     resize();
 
     const resizeObserver = new ResizeObserver(resize);
@@ -446,17 +388,272 @@ function BarChartCanvas({ config, lang, section }) {
     );
     intersectionObserver.observe(wrap);
 
+    canvas.addEventListener("pointermove", handlePointer);
+    canvas.addEventListener("pointerdown", handlePointer);
+    canvas.addEventListener("pointerleave", handlePointerLeave);
+
     return () => {
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
+      canvas.removeEventListener("pointermove", handlePointer);
+      canvas.removeEventListener("pointerdown", handlePointer);
+      canvas.removeEventListener("pointerleave", handlePointerLeave);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [config, lang, section]);
+  }, [config, lang, theme]);
 
   return (
-    <div ref={wrapRef} style={{ width: "100%", height: `${CHART_HEIGHT}px` }}>
+    <div className="chart-canvas-outer" style={{ height: `${CHART_HEIGHT}px` }}>
+      <AxisYLabel text={config.axisY?.[lang]} />
+      <div
+        ref={wrapRef}
+        className="chart-canvas-wrap"
+        style={{ marginLeft: `${AXIS_LABEL_WIDTH}px`, height: `${CHART_HEIGHT}px` }}
+      >
+        <canvas ref={canvasRef} style={{ width: "100%", height: `${CHART_HEIGHT}px`, display: "block" }} />
+        <div ref={tooltipRef} className="chart-tooltip" />
+      </div>
+    </div>
+  );
+}
+
+function BarChartCanvas({ config, lang }) {
+  const wrapRef = useRef(null);
+  const canvasRef = useRef(null);
+  const tooltipRef = useRef(null);
+  const rafRef = useRef(null);
+
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    const canvas = canvasRef.current;
+    const tooltip = tooltipRef.current;
+    if (!wrap || !canvas) return undefined;
+
+    const fontFamily = cssVar("--mono");
+    const labels = config.labels[lang];
+    const { values } = config;
+    const n = values.length;
+    const unit = config.unit?.[lang] ?? "";
+    const colors =
+      config.variant === "country"
+        ? config.countries.map((id) => cssVar(`--country-${id}`))
+        : valueGradientColors(values, cssVar("--chart-gradient-end"), cssVar("--chart-gradient-start"));
+    const yMax = config.yMax ?? niceMax(Math.max(...values));
+
+    const STAGGER_MS = 80;
+    const BAR_DURATION_MS = 1200;
+    const totalDuration = (n - 1) * STAGGER_MS + BAR_DURATION_MS;
+
+    let size = { width: 0, height: CHART_HEIGHT };
+    let state = { phase: "idle", startTime: 0 };
+    let lastElapsed = 0;
+
+    function layout() {
+      const padding = { top: 26, right: 12, bottom: 10, left: 12 };
+      const plotW = size.width - padding.left - padding.right;
+      const plotH = size.height - padding.top - padding.bottom;
+      const slot = plotW / n;
+      const barWidth = Math.min(64, slot * 0.72);
+      const centerX = (i) => padding.left + slot * (i + 0.5);
+      return { padding, plotW, plotH, barWidth, centerX };
+    }
+
+    function barRect(i, elapsedMs) {
+      const { padding, plotH, barWidth, centerX } = layout();
+      const baselineY = padding.top + plotH;
+      const delay = i * STAGGER_MS;
+      const raw = Math.min(Math.max((elapsedMs - delay) / BAR_DURATION_MS, 0), 1);
+      const eased = easeInOutQuart(raw);
+      const fullHeight = (plotH * values[i]) / yMax;
+      const h = fullHeight * eased;
+      return { x: centerX(i) - barWidth / 2, y: baselineY - h, w: barWidth, h, baselineY };
+    }
+
+    function draw(elapsedMs) {
+      if (!size.width) return;
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, size.width, size.height);
+      const valueColor = cssVar("--cream-soft");
+
+      values.forEach((v, i) => {
+        const { x, y, w, h } = barRect(i, elapsedMs);
+        const color = colors[i % colors.length];
+        if (h > 0) {
+          ctx.fillStyle = color;
+          roundRectTop(ctx, x, y, w, h, 4);
+          ctx.fill();
+        }
+
+        const label = labels[i];
+        const valueText = localizeNumber(v, lang);
+        const valueY = y - 4;
+
+        ctx.save();
+        ctx.fillStyle = valueColor;
+        ctx.font = `9px ${fontFamily}`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        ctx.fillText(valueText, x + w / 2, valueY);
+        ctx.restore();
+
+        if (!label) return;
+
+        if (h > 28) {
+          ctx.save();
+          ctx.translate(x + w / 2, y + h - 8);
+          ctx.rotate(-Math.PI / 2);
+          ctx.fillStyle = "#FFFFFF";
+          ctx.font = `8px ${fontFamily}`;
+          ctx.textAlign = "left";
+          ctx.textBaseline = "middle";
+          ctx.fillText(label, 0, 0);
+          ctx.restore();
+        } else {
+          ctx.save();
+          ctx.fillStyle = color;
+          ctx.font = `8px ${fontFamily}`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "bottom";
+          ctx.fillText(label, x + w / 2, valueY - 12);
+          ctx.restore();
+        }
+      });
+    }
+
+    let demoTimeoutIds = [];
+
+    function clearDemoTimeouts() {
+      demoTimeoutIds.forEach((id) => clearTimeout(id));
+      demoTimeoutIds = [];
+    }
+
+    function showTooltipFor(i) {
+      if (!tooltip) return;
+      const { x, y, w, baselineY } = barRect(i, lastElapsed);
+      tooltip.style.opacity = "1";
+      tooltip.style.left = `${x + w / 2}px`;
+      tooltip.style.top = `${Math.min(y, baselineY - 4)}px`;
+      tooltip.textContent = formatTooltip(labels[i], localizeNumber(values[i], lang), unit);
+    }
+
+    function runAutoDemo() {
+      if (!tooltip || n === 0) return;
+      showTooltipFor(0);
+      const hideId = setTimeout(() => {
+        if (tooltip) tooltip.style.opacity = "0";
+      }, AUTO_DEMO_DURATION_MS);
+      demoTimeoutIds.push(hideId);
+    }
+
+    function animate(timestamp) {
+      if (!state.startTime) state.startTime = timestamp;
+      const elapsed = timestamp - state.startTime;
+      lastElapsed = Math.min(elapsed, totalDuration);
+      draw(lastElapsed);
+      if (elapsed < totalDuration) {
+        rafRef.current = requestAnimationFrame(animate);
+      } else {
+        state = { phase: "done", startTime: 0 };
+        rafRef.current = null;
+        runAutoDemo();
+      }
+    }
+
+    function startAnimation() {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      clearDemoTimeouts();
+      state = { phase: "draw", startTime: 0 };
+      rafRef.current = requestAnimationFrame(animate);
+    }
+
+    function resetAnimation() {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+      clearDemoTimeouts();
+      if (tooltip) tooltip.style.opacity = "0";
+      state = { phase: "idle", startTime: 0 };
+      lastElapsed = 0;
+      draw(0);
+    }
+
+    function resize() {
+      const cssWidth = wrap.clientWidth;
+      if (!cssWidth) return;
+      setupCanvasDPR(canvas, cssWidth, CHART_HEIGHT);
+      size = { width: cssWidth, height: CHART_HEIGHT };
+      draw(lastElapsed);
+    }
+
+    function handlePointer(e) {
+      if (!tooltip) return;
+      clearDemoTimeouts();
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      let hit = null;
+      values.forEach((v, i) => {
+        const { x, y, w, baselineY } = barRect(i, lastElapsed);
+        const top = Math.min(y, baselineY - 24);
+        if (mx >= x && mx <= x + w && my >= top && my <= baselineY) {
+          hit = { x: x + w / 2, y: Math.min(y, baselineY - 4), i };
+        }
+      });
+      if (hit) {
+        tooltip.style.opacity = "1";
+        tooltip.style.left = `${hit.x}px`;
+        tooltip.style.top = `${hit.y}px`;
+        tooltip.textContent = formatTooltip(labels[hit.i], localizeNumber(values[hit.i], lang), unit);
+      } else {
+        tooltip.style.opacity = "0";
+      }
+    }
+
+    function handlePointerLeave() {
+      if (tooltip) tooltip.style.opacity = "0";
+    }
+
+    resize();
+
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(wrap);
+
+    const intersectionObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          startAnimation();
+        } else {
+          resetAnimation();
+        }
+      },
+      { threshold: 0.2 }
+    );
+    intersectionObserver.observe(wrap);
+
+    canvas.addEventListener("pointermove", handlePointer);
+    canvas.addEventListener("pointerdown", handlePointer);
+    canvas.addEventListener("pointerleave", handlePointerLeave);
+
+    return () => {
+      resizeObserver.disconnect();
+      intersectionObserver.disconnect();
+      canvas.removeEventListener("pointermove", handlePointer);
+      canvas.removeEventListener("pointerdown", handlePointer);
+      canvas.removeEventListener("pointerleave", handlePointerLeave);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      clearDemoTimeouts();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [config, lang]);
+
+  return (
+    <div
+      ref={wrapRef}
+      className="chart-canvas-outer chart-canvas-outer--bar"
+      style={{ height: `${CHART_HEIGHT}px` }}
+    >
       <canvas ref={canvasRef} style={{ width: "100%", height: `${CHART_HEIGHT}px`, display: "block" }} />
+      <div ref={tooltipRef} className="chart-tooltip" />
     </div>
   );
 }
@@ -472,9 +669,9 @@ function ChartBlock({ section }) {
   let canvas = null;
   if (config && inView) {
     if (config.type === "bar") {
-      canvas = <BarChartCanvas key={theme} config={config} lang={lang} section={section} />;
+      canvas = <BarChartCanvas key={theme} config={config} lang={lang} />;
     } else if (config.type === "line") {
-      canvas = <LineChartCanvas key={theme} config={config} lang={lang} t={t} />;
+      canvas = <LineChartCanvas key={theme} config={config} lang={lang} theme={theme} />;
     }
   }
 
@@ -482,7 +679,9 @@ function ChartBlock({ section }) {
     <div className="chart-block" ref={ref}>
       <div className="chart-label">{title}</div>
       {sub && <p className="chart-sub">{sub}</p>}
+      {config && <ChartLegend config={config} t={t} />}
       <div className="chart-placeholder">{config ? canvas : "Chart loads here"}</div>
+      {config?.type === "bar" && <p className="chart-hint">{BAR_CHART_HINT[lang]}</p>}
       {note && <div className="chart-note">{note}</div>}
     </div>
   );

@@ -12,6 +12,8 @@ import TypeGrid from "./components/TypeGrid";
 import UvCompare from "./components/UvCompare";
 import SourceList from "./components/SourceList";
 import IndiaReview from "./components/IndiaReview";
+import AustraliaReport from "./components/AustraliaReport";
+import TwoFutures from "./components/TwoFutures";
 import Footer from "./components/Footer";
 import ReadingProgress from "./components/ReadingProgress";
 
@@ -19,8 +21,6 @@ const FAILED_CLAIM_STAT = {
   bn: "তাদের দাবিকৃত SPF মান পূরণ করতে পারেনি",
   en: "failed to meet their labeled SPF claim",
 };
-
-const QUALITY_DOTS = ["dot-teal", "dot-sand", "dot-sand-deep"];
 
 function Main() {
   const { t, lang } = useContext(AppContext);
@@ -43,19 +43,12 @@ function Main() {
         <ChartBlock section="s3.c2" />
       </ChapterBlock>
       <ChapterBlock section="s4">
-        <ul className="quality-legend">
-          {[1, 2, 3].map((n) => (
-            <li key={n}>
-              <span className={`dot ${QUALITY_DOTS[n - 1]}`} />
-              {t[`s4.leg${n}`]}
-            </li>
-          ))}
-        </ul>
         <ChartBlock section="s4.uva" />
         <ChartBlock section="s4.uvb" />
         <p className="chapter-body">{t["s4.note"]}</p>
         <UvCompare section="s4.uv" />
       </ChapterBlock>
+      <TwoFutures />
       <ChapterBlock section="s5">
         <Cards section="s5" count={3} />
       </ChapterBlock>
@@ -67,7 +60,7 @@ function Main() {
       <ChapterBlock section="s7">
         <SourceList section="s7" />
       </ChapterBlock>
-      <ChapterBlock section="s8" />
+      <AustraliaReport section="s8" />
     </main>
   );
 }

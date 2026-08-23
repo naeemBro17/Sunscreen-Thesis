@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="bn" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>বিশেষ প্রতিবেদন — Premium Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+Bengali:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --bg:         #0D0B09;
+  --bg-panel:   #161210;
+  --bg-raised:  #201B16;
+  --cream:      #F4EFE8;
+  --cream-soft: #CCC2B8;
+  --cream-mute: #7D7268;
+  --teal:       #E8A830;
+  --teal-deep:  #9E6F20;
+  --sand:       #C8503A;
+  --line:       rgba(244,239,232,0.07);
+  --line-soft:  rgba(244,239,232,0.04);
+}
+
+[data-theme="light"] {
+  --bg:         #F6F1EA;
+  --bg-panel:   #EDE6DC;
+  --bg-raised:  #FFFFFF;
+  --cream:      #18140E;
+  --cream-soft: #3A332A;
+  --cream-mute: #7D7268;
+  --teal:       #9E6F20;
+  --teal-deep:  #6A4A15;
+  --sand:       #A83E2A;
+  --line:       rgba(24,20,14,0.09);
+  --line-soft:  rgba(24,20,14,0.05);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--cream);
+  font-family: 'Noto Serif Bengali', serif;
+  font-size: 17px;
+  line-height: 1.75;
+  transition: background 0.4s, color 0.4s;
+}
+
+/* ━━━ TOGGLE ━━━ */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--line);
+  padding: 12px 20px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.brand { font-family: 'Cormorant Garamond', serif; font-size: 18px; }
+.brand em { color: var(--teal); font-style: italic; }
+.toggles { display: flex; gap: 6px; }
+.tbtn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; letter-spacing: 0.1em;
+  padding: 5px 14px; border-radius: 3px; cursor: pointer;
+  border: 1px solid var(--line);
+  background: transparent; color: var(--cream-mute);
+  transition: all 0.25s;
+}
+.tbtn.on { background: var(--teal); color: var(--bg); border-color: var(--teal); font-weight: 600; }
+
+/* ━━━ LAYOUT ━━━ */
+.wrap { max-width: 700px; margin: 0 auto; padding: 0 20px 100px; }
+
+/* ━━━ ENTRY HERO ━━━ */
+.entry {
+  padding: 72px 0 56px;
+  border-bottom: 1px solid var(--line);
+}
+.eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 0.22em;
+  color: var(--teal); text-transform: uppercase;
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 20px;
+}
+.eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--teal); }
+
+.entry-challenge {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(32px, 7vw, 52px);
+  font-weight: 300; line-height: 1.15;
+  color: var(--cream); margin-bottom: 28px;
+  letter-spacing: -0.01em;
+}
+.entry-challenge em { color: var(--teal); font-style: italic; }
+
+.entry-body { color: var(--cream-soft); max-width: 580px; }
+.entry-body p { margin-bottom: 14px; }
+
+.legal-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 20px;
+  background: var(--bg-raised);
+  border: 1px solid var(--teal);
+  border-radius: 3px; padding: 10px 16px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px; color: var(--teal);
+  letter-spacing: 0.05em;
+}
+.legal-badge::before { content: '⚖'; font-size: 14px; }
+
+/* ━━━ CONTRAST BLOCK ━━━ */
+.contrast {
+  margin: 48px 0;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+  border-radius: 6px; overflow: hidden;
+}
+.contrast-col {
+  padding: 24px 20px;
+  background: var(--bg-panel);
+}
+.contrast-col.au { background: var(--bg-raised); border-left: 3px solid var(--teal); }
+.contrast-header {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+  margin-bottom: 16px; padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+.contrast-col .contrast-header { color: var(--cream-mute); }
+.contrast-col.au .contrast-header { color: var(--teal); }
+.contrast-row { margin-bottom: 12px; }
+.contrast-label {
+  font-size: 11px; color: var(--cream-mute);
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.05em; margin-bottom: 2px;
+}
+.contrast-val {
+  font-size: 15px; color: var(--cream-soft);
+  font-weight: 400;
+}
+.contrast-col.au .contrast-val { color: var(--cream); }
+.contrast-val.highlight { color: var(--teal); font-weight: 600; }
+
+/* ━━━ SECTION HEADING ━━━ */
+.sec-heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; font-weight: 600;
+  color: var(--cream); margin: 48px 0 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+/* ━━━ FOUR TESTS — ACCORDION ━━━ */
+.tests { margin-bottom: 48px; }
+.test-item {
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+}
+.test-trigger {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 20px 0; cursor: pointer;
+  background: none; border: none; width: 100%; text-align: left;
+  color: var(--cream);
+  transition: opacity 0.2s;
+}
+.test-trigger:hover { opacity: 0.8; }
+.test-num {
+  flex-shrink: 0;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--teal);
+  color: var(--teal);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px; font-weight: 500;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s;
+}
+.test-item.open .test-num {
+  background: var(--teal); color: var(--bg);
+}
+.test-title-wrap { flex: 1; }
+.test-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-weight: 600;
+  color: var(--cream); line-height: 1.2;
+  margin-bottom: 4px;
+}
+.test-summary {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; color: var(--teal);
+  letter-spacing: 0.05em;
+}
+.test-arrow {
+  flex-shrink: 0; margin-top: 6px;
+  font-size: 16px; color: var(--cream-mute);
+  transition: transform 0.3s;
+}
+.test-item.open .test-arrow { transform: rotate(180deg); }
+
+.test-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s ease;
+  padding-left: 48px;
+}
+.test-item.open .test-body { max-height: 600px; }
+.test-body-inner {
+  padding-bottom: 24px;
+  color: var(--cream-soft);
+  font-size: 16px;
+}
+
+/* ━━━ KEY STAT ━━━ */
+.key-stat {
+  background: var(--bg-raised);
+  border-left: 3px solid var(--teal);
+  padding: 24px 28px; margin: 32px 0;
+  border-radius: 0 4px 4px 0;
+}
+.stat-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 64px; font-weight: 300;
+  color: var(--teal); line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-label {
+  font-size: 15px; color: var(--cream-soft);
+}
+.stat-compare {
+  margin-top: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; color: var(--cream-mute);
+  letter-spacing: 0.05em;
+}
+
+/* ━━━ SURVEILLANCE SECTION ━━━ */
+.surveillance {
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 4px; padding: 28px;
+  margin: 40px 0;
+}
+.surveillance h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; font-weight: 600;
+  color: var(--cream); margin-bottom: 14px;
+}
+.surveillance p { color: var(--cream-soft); font-size: 16px; margin-bottom: 12px; }
+.prohibited {
+  margin-top: 16px; padding: 14px 18px;
+  background: rgba(200, 80, 58, 0.08);
+  border-left: 2px solid var(--sand);
+  border-radius: 0 3px 3px 0;
+  font-size: 14px; color: var(--cream-mute);
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.03em;
+}
+
+/* ━━━ ARTG BOX ━━━ */
+.artg-box {
+  margin: 40px 0;
+  border: 1px solid var(--teal);
+  border-radius: 4px; padding: 28px;
+  background: var(--bg-raised);
+}
+.artg-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 0.18em;
+  color: var(--teal); text-transform: uppercase; margin-bottom: 12px;
+}
+.artg-number {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 22px; font-weight: 500;
+  color: var(--cream); letter-spacing: 0.1em;
+  margin-bottom: 10px; padding: 10px 16px;
+  background: var(--bg-panel);
+  border-radius: 3px; display: inline-block;
+}
+.artg-explain { color: var(--cream-soft); font-size: 15px; margin: 12px 0; }
+.artg-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px; color: var(--teal);
+  text-decoration: none; letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--teal);
+  padding-bottom: 1px;
+  transition: opacity 0.2s;
+}
+.artg-link:hover { opacity: 0.7; }
+
+/* ━━━ CANCER COUNCIL ━━━ */
+.cc-section { margin: 48px 0; }
+.cc-section h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px; font-weight: 600;
+  color: var(--cream); margin-bottom: 14px;
+}
+.cc-section p { color: var(--cream-soft); margin-bottom: 12px; font-size: 16px; }
+.cc-quote {
+  margin-top: 20px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; font-weight: 300;
+  font-style: italic; color: var(--teal);
+  line-height: 1.5;
+  padding: 20px 0 0;
+  border-top: 1px solid var(--line);
+}
+
+/* ━━━ COMPARISON: USA vs AUS ━━━ */
+.usa-aus { margin: 48px 0; }
+.usa-aus h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px; font-weight: 600;
+  color: var(--cream); margin-bottom: 16px;
+}
+.compare-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+.compare-card {
+  padding: 20px; border-radius: 4px;
+  background: var(--bg-panel); border: 1px solid var(--line);
+}
+.compare-card.winner {
+  background: var(--bg-raised); border-color: var(--teal);
+}
+.compare-country {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.compare-card .compare-country { color: var(--cream-mute); }
+.compare-card.winner .compare-country { color: var(--teal); }
+.compare-item {
+  font-size: 14px; color: var(--cream-soft);
+  padding: 6px 0; border-bottom: 1px solid var(--line-soft);
+}
+.compare-item:last-child { border: none; }
+
+/* ━━━ TIMELINE: 1981 ━━━ */
+.timeline { margin: 48px 0; }
+.timeline h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px; font-weight: 600;
+  color: var(--cream); margin-bottom: 24px;
+}
+.tl-item {
+  display: flex; gap: 20px;
+  padding-bottom: 28px;
+  position: relative;
+}
+.tl-item::before {
+  content: ''; position: absolute;
+  left: 19px; top: 32px; bottom: 0;
+  width: 1px; background: var(--line);
+}
+.tl-item:last-child::before { display: none; }
+.tl-dot {
+  flex-shrink: 0;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--bg-raised); border: 1.5px solid var(--teal);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; color: var(--teal);
+  letter-spacing: -0.02em;
+}
+.tl-content h4 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 600; color: var(--cream);
+  margin-bottom: 6px;
+}
+.tl-content p { color: var(--cream-soft); font-size: 15px; }
+
+/* ━━━ BOTTLE SECTION ━━━ */
+.bottle-section {
+  margin: 48px 0;
+  background: var(--bg-raised);
+  border-left: 3px solid var(--teal);
+  border-radius: 0 4px 4px 0; padding: 28px;
+}
+.bottle-section h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px; font-weight: 600;
+  color: var(--cream); margin-bottom: 14px;
+}
+.bottle-section p { color: var(--cream-soft); font-size: 16px; margin-bottom: 12px; }
+.bottle-closing {
+  margin-top: 16px; padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 15px; color: var(--cream-soft);
+  font-style: italic;
+}
+
+/* ━━━ CITATION ━━━ */
+.citation {
+  margin-top: 40px; padding-top: 20px;
+  border-top: 1px solid var(--line);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; color: var(--cream-mute);
+  line-height: 1.8; letter-spacing: 0.02em;
+}
+
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><em>Skin</em>Science · বিশেষ প্রতিবেদন Preview</div>
+  <div class="toggles">
+    <button class="tbtn on" onclick="setTheme('dark')">DARK</button>
+    <button class="tbtn" onclick="setTheme('light')">LIGHT</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ① ENTRY -->
+  <div class="entry">
+    <div class="eyebrow">বিশেষ প্রতিবেদন</div>
+    <h1 class="entry-challenge">
+      অস্ট্রেলিয়ান সানস্ক্রিন —<br>
+      শুধু একটি পণ্য নয়,<br>
+      <em>একটি সরকারি প্রতিশ্রুতি</em>
+    </h1>
+    <div class="entry-body">
+      <p>একটি সানস্ক্রিন বোতলের গায়ে "SPF 50" লেখাটি আসলে একটি দাবি মাত্র — যদি না সেই দাবির পেছনে কোনো সরকার দাঁড়িয়ে থাকে। অস্ট্রেলিয়ার ক্ষেত্রে সেই সরকার সত্যিই দাঁড়িয়ে আছে। আইন করে।</p>
+      <p>পৃথিবীর বেশিরভাগ দেশে সানস্ক্রিন একটি সাধারণ কসমেটিক পণ্য। কিন্তু অস্ট্রেলিয়ায় SPF ৪ বা তার বেশি যেকোনো সানস্ক্রিনকে আইনত "Therapeutic Good" অর্থাৎ ঔষধ হিসেবে গণ্য করা হয়।</p>
+      <div class="legal-badge">TGA — একই সংস্থা যারা প্রতিটি ওষুধ ও ভ্যাকসিন অনুমোদন করে</div>
+    </div>
+  </div>
+
+  <!-- ② CONTRAST -->
+  <div class="contrast">
+    <div class="contrast-col">
+      <div class="contrast-header">🌍 বাকি দুনিয়া</div>
+      <div class="contrast-row">
+        <div class="contrast-label">পণ্য শ্রেণী</div>
+        <div class="contrast-val">সাধারণ কসমেটিক</div>
+      </div>
+      <div class="contrast-row">
+        <div class="contrast-label">পানি পরীক্ষার সীমা</div>
+        <div class="contrast-val">সর্বোচ্চ ৮০ মিনিট</div>
+      </div>
+      <div class="contrast-row">
+        <div class="contrast-label">SPF যাচাই</div>
+        <div class="contrast-val">কোম্পানির নিজস্ব</div>
+      </div>
+      <div class="contrast-row">
+        <div class="contrast-label">বিজ্ঞাপন নিয়ন্ত্রণ</div>
+        <div class="contrast-val">দুর্বল বা নেই</div>
+      </div>
+    </div>
+    <div class="contrast-col au">
+      <div class="contrast-header">🇦🇺 অস্ট্রেলিয়া</div>
+      <div class="contrast-row">
+        <div class="contrast-label">পণ্য শ্রেণী</div>
+        <div class="contrast-val highlight">আইনত ঔষধ</div>
+      </div>
+      <div class="contrast-row">
+        <div class="contrast-label">পানি পরীক্ষার সীমা</div>
+        <div class="contrast-val highlight">৪ ঘণ্টা পর্যন্ত</div>
+      </div>
+      <div class="contrast-row">
+        <div class="contrast-label">SPF যাচাই</div>
+        <div class="contrast-val highlight">সরকার নিয়ন্ত্রিত</div>
+      </div>
+      <div class="contrast-row">
+        <div class="contrast-label">বিজ্ঞাপন নিয়ন্ত্রণ</div>
+        <div class="contrast-val highlight">মিথ্যা দাবি আইনত নিষিদ্ধ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ FOUR TESTS -->
+  <div class="sec-heading">বাজারে আসার আগে চারটি বাধ্যতামূলক পরীক্ষা</div>
+  <p style="color:var(--cream-soft); margin-bottom: 24px; font-size:16px;">কোনো কোম্পানি চাইলেই অস্ট্রেলিয়ায় সানস্ক্রিন বিক্রি করতে পারে না। TGA অনুমতি দেওয়ার আগে প্রতিটি পণ্যকে চারটি স্বতন্ত্র পরীক্ষায় উত্তীর্ণ হতে হয়।</p>
+
+  <div class="tests">
+
+    <div class="test-item" id="t1">
+      <button class="test-trigger" onclick="toggle('t1')">
+        <div class="test-num">১</div>
+        <div class="test-title-wrap">
+          <div class="test-title">মানুষের ত্বকে সরাসরি SPF যাচাই</div>
+          <div class="test-summary">মেশিনে নয় — মানুষের পিঠে</div>
+        </div>
+        <div class="test-arrow">▾</div>
+      </button>
+      <div class="test-body">
+        <div class="test-body-inner">
+          এই পরীক্ষাটি গবেষণাগারের মেশিনে নয়, সরাসরি মানুষের শরীরে করা হয়। কমপক্ষে দশজন স্বেচ্ছাসেবীর পিঠে নির্দিষ্ট পরিমাণে (২ মিলিগ্রাম/সেমি²) সানস্ক্রিন মাখিয়ে Solar Simulator নামের একটি যন্ত্রের মাধ্যমে তীব্র কৃত্রিম সূর্যরশ্মি ফেলা হয়। সানস্ক্রিন ছাড়া ত্বক কত দ্রুত লাল হয় এবং সানস্ক্রিন মাখার পর কতক্ষণ অক্ষত থাকে — এই অনুপাত থেকেই প্রকৃত SPF নির্ধারণ করা হয়। বোতলে যা লেখা, তা ল্যাবে মানুষের ত্বকে প্রমাণ না করতে পারলে অনুমতি মেলে না।
+        </div>
+      </div>
+    </div>
+
+    <div class="test-item" id="t2">
+      <button class="test-trigger" onclick="toggle('t2')">
+        <div class="test-num">২</div>
+        <div class="test-title-wrap">
+          <div class="test-title">পানিতে টিকে থাকার পরীক্ষা</div>
+          <div class="test-summary">ঢাকার ঘামেও টিকবে — ৪ ঘণ্টা</div>
+        </div>
+        <div class="test-arrow">▾</div>
+      </button>
+      <div class="test-body">
+        <div class="test-body-inner">
+          এটিই অস্ট্রেলিয়ান সানস্ক্রিনের সবচেয়ে গুরুত্বপূর্ণ বৈশিষ্ট্য। সানস্ক্রিন মাখানো স্বেচ্ছাসেবীদের একটি সুইমিং পুলে নামানো হয় — যেখানে পানির স্রোতও থাকে। নির্দিষ্ট সময় (২ ঘণ্টা বা ৪ ঘণ্টা) পানিতে থাকার পরও যদি পণ্যটি আগের মতো সুরক্ষা দিতে পারে, কেবল তখনই বোতলে "Water Resistant" লেখার অনুমতি মেলে।
+          <div class="key-stat" style="margin: 16px 0 0;">
+            <div class="stat-number">৪</div>
+            <div class="stat-label">ঘণ্টা পানিতে — অস্ট্রেলিয়ার সর্বোচ্চ সীমা</div>
+            <div class="stat-compare">অন্যান্য দেশে সর্বোচ্চ: ৮০ মিনিট</div>
+          </div>
+          <p style="margin-top:14px;">বাংলাদেশের মতো আর্দ্র আবহাওয়ায়, যেখানে ঘাম একটি ধ্রুব সমস্যা, এই পরীক্ষাটিই পণ্যের বাস্তব কার্যকারিতার সবচেয়ে নির্ভরযোগ্য প্রমাণ।</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-item" id="t3">
+      <button class="test-trigger" onclick="toggle('t3')">
+        <div class="test-num">৩</div>
+        <div class="test-title-wrap">
+          <div class="test-title">UVA সুরক্ষা যাচাই (Broad Spectrum Test)</div>
+          <div class="test-summary">রোদে পোড়া নয়, মেছতাও আটকায়</div>
+        </div>
+        <div class="test-arrow">▾</div>
+      </button>
+      <div class="test-body">
+        <div class="test-body-inner">
+          SPF শুধু UVB থেকে সুরক্ষা দেয় — যা রোদে পোড়ার কারণ। কিন্তু ত্বকের গভীরে প্রবেশ করা UVA রশ্মি, যা মেছতা ও দীর্ঘমেয়াদি ফটোএজিংয়ের জন্য দায়ী, সেটি আটকানো হচ্ছে কিনা তা আলাদাভাবে পরীক্ষা করা হয়। অস্ট্রেলিয়ান নিয়ম অনুযায়ী পণ্যটিকে অবশ্যই ৩৭০ ন্যানোমিটারের বেশি তরঙ্গদৈর্ঘ্যের রশ্মি আটকাতে হবে — এটি পাস না করলে বিক্রয় নিষিদ্ধ।
+        </div>
+      </div>
+    </div>
+
+    <div class="test-item" id="t4">
+      <button class="test-trigger" onclick="toggle('t4')">
+        <div class="test-num">৪</div>
+        <div class="test-title-wrap">
+          <div class="test-title">তাপমাত্রায় স্থিতিশীলতা (Stability Test)</div>
+          <div class="test-summary">৫০°C তাপেও অক্ষত — ঢাকার গরম সামলায়</div>
+        </div>
+        <div class="test-arrow">▾</div>
+      </button>
+      <div class="test-body">
+        <div class="test-body-inner">
+          গরমে বা দীর্ঘদিন সংরক্ষণে পণ্যটির গুণমান নষ্ট হয় কিনা তা যাচাই করতে একে ৪০–৫০ ডিগ্রি সেলসিয়াস তাপমাত্রায় কয়েক মাস রেখে দেওয়া হয়। যদি ক্রিম থেকে তেল আলাদা হয় বা কার্যকারিতা কমে যায়, পণ্যটি বাতিল। ঢাকার তীব্র গরমেও অস্ট্রেলিয়ান সানস্ক্রিন কার্যকর থাকার কারণ এই পরীক্ষাটি।
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ④ SURVEILLANCE -->
+  <div class="surveillance">
+    <h3>বাজারে আসার পরেও সরকারের নজর থামে না</h3>
+    <p>অনুমতি পাওয়ার পরও প্রতিটি কোম্পানিকে নিয়মিত সরকারি নজরদারির মধ্যে থাকতে হয়। কারখানায় নিয়মিত সরকারি পরিদর্শন হয়। বিজ্ঞাপনে মিথ্যা দাবি করলে লাইসেন্স বাতিল ও বিশাল জরিমানার বিধান আছে।</p>
+    <div class="prohibited">
+      ❌ "১০০% সান প্রোটেকশন" · "সারাদিন মাখতে হবে না"<br>
+      — এই ধরনের বিভ্রান্তিকর দাবি অস্ট্রেলিয়ায় আইনত নিষিদ্ধ
+    </div>
+  </div>
+
+  <!-- ⑤ ARTG BOX -->
+  <div class="artg-box">
+    <div class="artg-label">বোতলে যা খুঁজবেন</div>
+    <div class="artg-number">AUST L — XXXXXXXX</div>
+    <p class="artg-explain">প্রতিটি অনুমোদিত পণ্যের বোতলে থাকে একটি ARTG নম্বর — সরকারের কেন্দ্রীয় ডাটাবেজে নিবন্ধিত একটি অনন্য শনাক্তকারী। এটি দেখলে বুঝবেন — পণ্যটি শুধু কারখানা থেকে নয়, সরকারের অনুমোদন পেয়ে আপনার হাতে এসেছে।</p>
+    <a class="artg-link" href="https://www.tga.gov.au/resources/artg" target="_blank">TGA ওয়েবসাইটে যাচাই করুন ↗</a>
+  </div>
+
+  <!-- ⑥ CANCER COUNCIL -->
+  <div class="cc-section">
+    <h3>Cancer Council — একটি ব্যবসা নয়, একটি দায়বদ্ধতা</h3>
+    <p>পরিচিত Cancer Council সানস্ক্রিনটি কোনো বাণিজ্যিক কসমেটিক কোম্পানির পণ্য নয়। এটি অস্ট্রেলিয়ার একটি সরকার-সমর্থিত অলাভজনক সংস্থার পণ্য। এই সানস্ক্রিন বিক্রি থেকে যে আয় হয়, তার একটি বড় অংশ সরাসরি ক্যান্সার গবেষণা ও চিকিৎসায় ব্যয় হয়।</p>
+    <div class="cc-quote">
+      "এই পণ্যটি কেনার মাধ্যমে আপনি শুধু নিজের ত্বক সুরক্ষিত করছেন না — একটি বৈজ্ঞানিক উদ্দেশ্যেও অবদান রাখছেন।"
+    </div>
+  </div>
+
+  <!-- ⑦ USA vs AUS -->
+  <div class="usa-aus">
+    <h3>আমেরিকার তুলনায় কেন অস্ট্রেলিয়ান ফিল্টার প্রযুক্তি এগিয়ে</h3>
+    <div class="compare-grid">
+      <div class="compare-card">
+        <div class="compare-country">🇺🇸 আমেরিকা (FDA)</div>
+        <div class="compare-item">গত ২৫ বছরে নতুন ফিল্টার অনুমোদন নেই</div>
+        <div class="compare-item">পুরনো কেমিক্যাল ব্যবহারে বাধ্য</div>
+        <div class="compare-item">Tinosorb, Uvinul অনুমোদিত নয়</div>
+      </div>
+      <div class="compare-card winner">
+        <div class="compare-country">🇦🇺 অস্ট্রেলিয়া (TGA)</div>
+        <div class="compare-item">ইউরোপের সাথে তাল মিলিয়ে আপডেট</div>
+        <div class="compare-item">সর্বাধুনিক ফটোস্টেবল ফিল্টার অনুমোদিত</div>
+        <div class="compare-item">Tinosorb M, Tinosorb S, Uvinul A Plus ✓</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑧ TIMELINE -->
+  <div class="timeline">
+    <h3>৪০ বছরের জাতীয় অভ্যাস</h3>
+    <div class="tl-item">
+      <div class="tl-dot">১৯৮১</div>
+      <div class="tl-content">
+        <h4>"Slip, Slop, Slap" আন্দোলন শুরু</h4>
+        <p>শার্ট পরো, সানস্ক্রিন মাখো, টুপি দাও — একটি জাতীয় সচেতনতা আন্দোলনের জন্ম।</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot">৪০+</div>
+      <div class="tl-content">
+        <h4>চার দশকের গবেষণা ও পরিমার্জন</h4>
+        <p>একটি পুরো জাতি প্রতিদিন সানস্ক্রিন ব্যবহার করছে, গবেষণা করছে এবং ফর্মুলেশন পরিমার্জন করছে।</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot">আজ</div>
+      <div class="tl-content">
+        <h4>পৃথিবীর সবচেয়ে পরিপক্ব ফর্মুলেশন বিজ্ঞান</h4>
+        <p>এই ঐতিহাসিক অভিজ্ঞতার কারণেই অস্ট্রেলিয়ান ফর্মুলেশন বিজ্ঞান আজ পৃথিবীর সর্বোচ্চ মানের।</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑨ BOTTLE -->
+  <div class="bottle-section">
+    <h3>বোতল কিনলে যা দেখবেন</h3>
+    <p>অস্ট্রেলিয়ান বাজারে বিক্রি হওয়া আসল TGA-অনুমোদিত সানস্ক্রিনের গায়ে ছোট করে AUST L — নিবন্ধন নম্বর লেখা থাকে। এই নম্বরটি TGA-র সরকারি ওয়েবসাইটে যাচাই করা যায়।</p>
+    <div class="bottle-closing">
+      আপনি যখন Cancer Council বা Hamilton-এর বোতল হাতে নিচ্ছেন, আপনি নিশ্চিত থাকতে পারেন যে এই বোতলের ভেতরের জিনিসটি পানিতে ডুবিয়ে এবং মানুষের ত্বকে পুড়িয়ে প্রমাণ করার পরেই আপনার হাতে এসেছে।
+    </div>
+  </div>
+
+  <!-- CITATION -->
+  <div class="citation">
+    সূত্র: TGA Therapeutic Goods Administration · ABC News Australia · ChemLinked Cosmetic Regulatory Portal · CHOICE Australia · Clayton Utz Legal Analysis · Standard Procedure Australia · Mukti Organics Research · SBS Bangla · Nine.com.au Health
+  </div>
+
+</div>
+
+<script>
+function toggle(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  document.querySelectorAll('.tbtn').forEach(b => b.classList.remove('on'));
+  event.target.classList.add('on');
+}
+</script>
+</body>
+</html>

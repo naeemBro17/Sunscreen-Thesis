@@ -1,39 +1,74 @@
 :root {
-  /* Backgrounds */
-  --bg:         #0A0E0D;
-  --bg-panel:   #111614;
-  --bg-raised:  #181E1C;
+  /* Base surface colors */
+  --bg:         #0D0B09;
+  --bg-panel:   #161210;
+  --bg-raised:  #201B16;
 
-  /* Typography */
-  --cream:      #EDE8DE;
-  --cream-soft: #C4BDB3;
-  --cream-mute: #7A756E;
+  --cream:      #F4EFE8;
+  --cream-soft: #CCC2B8;
+  --cream-mute: #7D7268;
 
-  /* Accent — use sparingly */
-  --teal:       #4A9B94;
-  --teal-deep:  #2C6B66;
-  --sand:       #C9B79C;
-  --sand-deep:  #8A7355;
+  --teal:       #E8A830;
+  --teal-deep:  #9E6F20;
+  --sand:       #C8503A;
+  --sand-deep:  #8C3828;
 
-  /* Lines */
-  --line:       rgba(237,232,222,0.10);
-  --line-soft:  rgba(237,232,222,0.06);
+  --line:       rgba(244,239,232,0.07);
+  --line-soft:  rgba(244,239,232,0.04);
+
+  /* Country identity colors — used in tables and country-comparison bar charts */
+  --country-australia: #34A853;
+  --country-japan:     #4285F4;
+  --country-eu:        #D4A843;
+  --country-korea:     #FBBC04;
+  --country-india:     #A0452C;
+
+  /* Country table-tint alpha (percentage), single source for RegTable column tints */
+  --tint-australia: 15%;
+  --tint-japan:     15%;
+  --tint-eu:        12%;
+  --tint-korea:     15%;
+  --tint-india:     20%;
+
+  /* Severity colors — used in damage/quality comparison line charts (traffic light) */
+  --severity-low:    #34A853;
+  --severity-medium: #FBBC04;
+  --severity-high:   #EA4335;
+
+  /* Chart gradient endpoints — used in value-based bar chart gradients */
+  --chart-gradient-start: #D4A843;
+  --chart-gradient-end:   #6B5535;
+
+  /* Hero overlay text — sits over the photo + scrim, stays light in both themes */
+  --hero-ink:      #F0EBE3;
+  --hero-ink-soft: #C8BFB5;
+  --hero-ink-mute: #6B6560;
 
   /* Typography scale */
-  --serif: "Cormorant Garamond", Georgia, serif;
-  --mono:  "IBM Plex Mono", monospace;
-  --sans:  "Jost", system-ui, sans-serif;
+  --serif:    "Cormorant Garamond", Georgia, serif;
+  --serif-bn: "Noto Serif Bengali", "Cormorant Garamond", Georgia, serif;
+  --mono:     "IBM Plex Mono", monospace;
+  --sans:     "Jost", system-ui, sans-serif;
 }
 
 [data-theme="light"] {
-  --bg:         #F5F0E6;
-  --bg-panel:   #EDE8DE;
+  --bg:         #F6F1EA;
+  --bg-panel:   #EDE6DC;
   --bg-raised:  #FFFFFF;
-  --cream:      #16201E;
-  --cream-soft: #3A3530;
-  --cream-mute: #6B6560;
-  --line:       rgba(22,32,30,0.10);
-  --line-soft:  rgba(22,32,30,0.06);
-  --sand:       #8A7355;
-  --teal:       #2C6B66;
+  --cream:      #18140E;
+  --cream-soft: #3A332A;
+  --cream-mute: #7D7268;
+  --teal:       #9E6F20;
+  --teal-deep:  #6A4A15;
+  --sand:       #A83E2A;
+  --sand-deep:  #7A2D1E;
+  --line:       rgba(24,20,14,0.09);
+  --line-soft:  rgba(24,20,14,0.05);
+
+  /* Country/severity hues stay the same in light mode — only tint alpha drops */
+  --tint-australia: 7%;
+  --tint-japan:     7%;
+  --tint-eu:        6%;
+  --tint-korea:     7%;
+  --tint-india:     10%;
 }
