@@ -734,7 +734,7 @@ a {
 .bgc-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(10,8,6,0.20) 0%, rgba(10,8,6,0.40) 100%);
+  background: linear-gradient(to bottom, rgba(10,8,6,0.55) 0%, rgba(10,8,6,0.75) 100%);
 }
 [data-theme="light"] .bgc-overlay {
   background: linear-gradient(to bottom, rgba(246,241,234,0.15) 0%, rgba(246,241,234,0.35) 100%);
@@ -746,20 +746,13 @@ a {
   margin: 0 auto;
 }
 
-.bgc-heading { text-align: center; margin-bottom: 32px; }
-.bgc-eyebrow {
-  display: inline-flex; align-items: center; gap: 8px; justify-content: center;
-  font-family: var(--mono); font-size: 11px;
-  letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--teal);
-}
-.bgc-eyebrow::before { content: ""; width: 20px; height: 1px; background: var(--teal); }
 .bgc-title {
+  text-align: center;
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(1.9rem, 5vw, 2.8rem);
   color: var(--hero-ink);
-  margin-top: 16px;
+  margin-bottom: 32px;
   line-height: 1.25;
 }
 [data-theme="light"] .bgc-title { color: #2A2117; }
@@ -800,37 +793,14 @@ a {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
 }
-.arc-gauge-readout { position: relative; display: flex; flex-direction: column; align-items: center; }
-.arc-gauge-icon-wrap {
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-bottom: 2px;
-}
+.arc-gauge-readout { display: flex; flex-direction: column; align-items: center; }
 
-.bgc-drop-icon { display: block; }
+.bgc-drop-icon { display: block; margin-bottom: 6px; }
 .bgc-gauge-value { font-family: var(--serif); font-size: 32px; font-weight: 400; line-height: 1; }
 .bgc-gauge-label {
   font-family: var(--mono); font-size: 13px;
   letter-spacing: 0.1em; text-transform: uppercase;
   margin-top: 6px;
-}
-
-.bgc-closing {
-  text-align: center;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 20px;
-  color: rgba(244,239,232,0.6);
-  border-top: 1px solid rgba(244,239,232,0.08);
-  padding-top: 24px;
-  margin-top: 32px;
-  line-height: 1.6;
-}
-[data-theme="light"] .bgc-closing {
-  color: rgba(24,20,14,0.6);
-  border-top-color: rgba(24,20,14,0.1);
 }
 
 @media (max-width: 480px) {

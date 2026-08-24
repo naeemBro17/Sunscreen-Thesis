@@ -49,9 +49,25 @@ function arcGradient(ctx, cx, cy, radius, colorFrom, colorTo) {
   }
 }
 
-function ArcGauge({ fraction, trackColor, glowColor, gradientFrom, gradientTo, duration, delay = 0, children }) {
+function ArcGauge({
+  fraction,
+  trackColor,
+  glowColor,
+  gradientFrom,
+  gradientTo,
+  duration,
+  autoStart = true,
+  start = true,
+  onComplete,
+  children,
+}) {
   const [wrapRef, inView] = useInViewOnce(0.3);
   const canvasRef = useRef(null);
+  const onCompleteRef = useRef(onComplete);
+
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -61,7 +77,6 @@ function ArcGauge({ fraction, trackColor, glowColor, gradientFrom, gradientTo, d
     let size = 0;
     let currentFraction = 0;
     let rafId = null;
-    let timeoutId = null;
 
     function draw(progressFraction) {
       if (!size) return;
@@ -98,6 +113,8 @@ function ArcGauge({ fraction, trackColor, glowColor, gradientFrom, gradientTo, d
       draw(currentFraction);
       if (raw < 1) {
         rafId = requestAnimationFrame((t) => animate(startTs, t));
+      } else {
+        onCompleteRef.current?.();
       }
     }
 
@@ -106,18 +123,16 @@ function ArcGauge({ fraction, trackColor, glowColor, gradientFrom, gradientTo, d
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(wrap);
 
-    if (inView) {
-      timeoutId = setTimeout(() => {
-        rafId = requestAnimationFrame((ts) => animate(ts, ts));
-      }, delay);
+    const shouldStart = autoStart ? inView : inView && start;
+    if (shouldStart) {
+      rafId = requestAnimationFrame((ts) => animate(ts, ts));
     }
 
     return () => {
       resizeObserver.disconnect();
       if (rafId) cancelAnimationFrame(rafId);
-      if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [inView, fraction, trackColor, glowColor, gradientFrom, gradientTo, duration, delay, wrapRef]);
+  }, [inView, start, autoStart, fraction, trackColor, glowColor, gradientFrom, gradientTo, duration, wrapRef]);
 
   return (
     <div className="arc-gauge" ref={wrapRef}>

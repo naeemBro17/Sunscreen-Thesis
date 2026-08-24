@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { motion } from "framer-motion";
 import { AppContext } from "../context/AppContext";
 import ArcGauge from "./ArcGauge";
@@ -24,6 +24,7 @@ function WaterDropIcon() {
 function BangladeshClimate() {
   const { t, theme } = useContext(AppContext);
   const trackColor = theme === "light" ? "rgba(0,0,0,0.10)" : "rgba(255,255,255,0.12)";
+  const [heatDone, setHeatDone] = useState(false);
 
   return (
     <motion.section
@@ -36,10 +37,7 @@ function BangladeshClimate() {
       <div className="bgc-photo" />
       <div className="bgc-overlay" />
       <div className="bgc-inner">
-        <div className="bgc-heading">
-          <span className="bgc-eyebrow">{t["bgc.eyebrow"]}</span>
-          <h2 className="bgc-title">{t["bgc.title"]}</h2>
-        </div>
+        <h2 className="bgc-title">{t["bgc.title"]}</h2>
 
         <div className="bgc-cards">
           <div className="bgc-card bgc-card--heat">
@@ -49,7 +47,8 @@ function BangladeshClimate() {
               glowColor="rgba(232,97,26,0.25)"
               gradientFrom="#E8A830"
               gradientTo="#E8611A"
-              duration={1500}
+              duration={2000}
+              onComplete={() => setHeatDone(true)}
             >
               <div className="arc-gauge-readout">
                 <div className="bgc-gauge-value" style={{ color: "#E8611A" }}>
@@ -69,13 +68,12 @@ function BangladeshClimate() {
               glowColor="rgba(46,139,192,0.25)"
               gradientFrom="#56C8F0"
               gradientTo="#1A6ABA"
-              duration={1800}
-              delay={300}
+              duration={2000}
+              autoStart={false}
+              start={heatDone}
             >
               <div className="arc-gauge-readout">
-                <div className="arc-gauge-icon-wrap">
-                  <WaterDropIcon />
-                </div>
+                <WaterDropIcon />
                 <div className="bgc-gauge-value" style={{ color: "#2E8BC0" }}>
                   {t["bgc.humidity.value"]}
                 </div>
@@ -86,8 +84,6 @@ function BangladeshClimate() {
             </ArcGauge>
           </div>
         </div>
-
-        <p className="bgc-closing">{t["bgc.closing"]}</p>
       </div>
     </motion.section>
   );
