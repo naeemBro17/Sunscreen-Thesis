@@ -3,8 +3,8 @@ import useInViewOnce from "../hooks/useInViewOnce";
 
 const START_ANGLE = (135 * Math.PI) / 180;
 const SWEEP_ANGLE = (270 * Math.PI) / 180;
-const TRACK_WIDTH = 18;
-const GLOW_WIDTH = 30;
+const TRACK_WIDTH = 14;
+const GLOW_WIDTH = 26;
 const FILL_WIDTH = 18;
 
 function easeOutCubic(x) {

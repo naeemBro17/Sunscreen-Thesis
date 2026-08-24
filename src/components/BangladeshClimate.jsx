@@ -7,8 +7,8 @@ function WaterDropIcon() {
   return (
     <svg
       className="bgc-drop-icon"
-      width="32"
-      height="32"
+      width="20"
+      height="20"
       viewBox="0 0 24 24"
       fill="rgba(86,200,240,0.25)"
       stroke="#56C8F0"
@@ -22,7 +22,8 @@ function WaterDropIcon() {
 }
 
 function BangladeshClimate() {
-  const { t } = useContext(AppContext);
+  const { t, theme } = useContext(AppContext);
+  const trackColor = theme === "light" ? "rgba(0,0,0,0.10)" : "rgba(255,255,255,0.12)";
 
   return (
     <motion.section
@@ -44,17 +45,19 @@ function BangladeshClimate() {
           <div className="bgc-card bgc-card--heat">
             <ArcGauge
               fraction={0.4}
-              trackColor="rgba(255,255,255,0.10)"
+              trackColor={trackColor}
               glowColor="rgba(232,97,26,0.25)"
               gradientFrom="#E8A830"
               gradientTo="#E8611A"
               duration={1500}
             >
-              <div className="bgc-gauge-value" style={{ color: "#E8611A" }}>
-                {t["bgc.heat.value"]}
-              </div>
-              <div className="bgc-gauge-label" style={{ color: "rgba(232,97,26,0.7)" }}>
-                {t["bgc.heat.label"]}
+              <div className="arc-gauge-readout">
+                <div className="bgc-gauge-value" style={{ color: "#E8611A" }}>
+                  {t["bgc.heat.value"]}
+                </div>
+                <div className="bgc-gauge-label" style={{ color: "rgba(232,97,26,0.9)" }}>
+                  {t["bgc.heat.label"]}
+                </div>
               </div>
             </ArcGauge>
           </div>
@@ -62,19 +65,23 @@ function BangladeshClimate() {
           <div className="bgc-card bgc-card--humidity">
             <ArcGauge
               fraction={0.8}
-              trackColor="rgba(255,255,255,0.10)"
+              trackColor={trackColor}
               glowColor="rgba(46,139,192,0.25)"
               gradientFrom="#56C8F0"
               gradientTo="#1A6ABA"
               duration={1800}
               delay={300}
             >
-              <WaterDropIcon />
-              <div className="bgc-gauge-value" style={{ color: "#2E8BC0" }}>
-                {t["bgc.humidity.value"]}
-              </div>
-              <div className="bgc-gauge-label" style={{ color: "rgba(46,139,192,0.7)" }}>
-                {t["bgc.humidity.label"]}
+              <div className="arc-gauge-readout">
+                <div className="arc-gauge-icon-wrap">
+                  <WaterDropIcon />
+                </div>
+                <div className="bgc-gauge-value" style={{ color: "#2E8BC0" }}>
+                  {t["bgc.humidity.value"]}
+                </div>
+                <div className="bgc-gauge-label" style={{ color: "rgba(46,139,192,0.9)" }}>
+                  {t["bgc.humidity.label"]}
+                </div>
               </div>
             </ArcGauge>
           </div>
