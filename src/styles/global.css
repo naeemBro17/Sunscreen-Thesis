@@ -600,7 +600,14 @@ a {
 }
 
 @media (max-width: 560px) {
-  .au-contrast, .au-compare-grid { grid-template-columns: 1fr; }
+  .au-compare-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .au-contrast-col { padding: 16px 12px; }
+  .au-contrast-header { font-size: 9px; }
+  .au-contrast-label { font-size: 10px; }
+  .au-contrast-val { font-size: 13px; }
 }
 
 /* ---------- Two Futures: Naeema & Mim expandable example (s4b) ---------- */
@@ -709,4 +716,106 @@ a {
 
 @media (max-width: 560px) {
   .tf-cards { grid-template-columns: 1fr; }
+}
+
+/* ---------- Bangladesh Climate section (bgc) ---------- */
+.bgc-section {
+  position: relative;
+  overflow: hidden;
+  padding: 96px 22px;
+  border-top: 1px solid var(--line);
+}
+.bgc-photo {
+  position: absolute;
+  inset: 0;
+  background-image: url('/images/sunset.png');
+  background-size: cover;
+  background-position: center top;
+}
+.bgc-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(10,8,6,0.45) 0%, rgba(10,8,6,0.65) 100%);
+}
+.bgc-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.bgc-heading { text-align: center; margin-bottom: 48px; }
+.bgc-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px; justify-content: center;
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--teal);
+}
+.bgc-eyebrow::before { content: ""; width: 20px; height: 1px; background: var(--teal); }
+.bgc-title {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(1.9rem, 5vw, 2.8rem);
+  color: var(--hero-ink);
+  margin-top: 16px;
+  line-height: 1.25;
+}
+
+.bgc-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.bgc-card {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 20px;
+  padding: 40px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.bgc-card--heat {
+  background: rgba(232,97,26,0.12);
+  border: 1px solid rgba(232,97,26,0.30);
+  box-shadow: inset 0 1px 0 rgba(255,200,100,0.15), 0 0 60px rgba(232,97,26,0.10);
+}
+.bgc-card--humidity {
+  background: rgba(46,139,192,0.12);
+  border: 1px solid rgba(46,139,192,0.30);
+  box-shadow: inset 0 1px 0 rgba(100,200,255,0.15), 0 0 60px rgba(46,139,192,0.10);
+}
+
+.arc-gauge { position: relative; width: 100%; max-width: 180px; aspect-ratio: 1; margin: 0 auto; }
+.arc-gauge-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.arc-gauge-center {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+
+.bgc-drop-icon { margin-bottom: 4px; }
+.bgc-gauge-value { font-family: var(--serif); font-size: clamp(1.8rem, 8vw, 4rem); font-weight: 400; line-height: 1; }
+.bgc-gauge-label {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  margin-top: 6px;
+}
+
+.bgc-closing {
+  text-align: center;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 20px;
+  color: rgba(244,239,232,0.6);
+  border-top: 1px solid rgba(244,239,232,0.08);
+  padding-top: 28px;
+  margin-top: 40px;
+  line-height: 1.6;
+}
+
+@media (max-width: 480px) {
+  .bgc-cards { grid-template-columns: 1fr; max-width: 280px; margin: 0 auto; }
+  .bgc-card { padding: 32px 24px; }
 }

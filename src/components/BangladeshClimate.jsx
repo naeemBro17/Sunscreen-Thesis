@@ -1,0 +1,89 @@
+import { useContext } from "react";
+import { motion } from "framer-motion";
+import { AppContext } from "../context/AppContext";
+import ArcGauge from "./ArcGauge";
+
+function WaterDropIcon() {
+  return (
+    <svg
+      className="bgc-drop-icon"
+      width="32"
+      height="32"
+      viewBox="0 0 24 24"
+      fill="rgba(86,200,240,0.25)"
+      stroke="#56C8F0"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 2.5c-3.6 5-7 9.3-7 13.3a7 7 0 0 0 14 0c0-4-3.4-8.3-7-13.3z" />
+    </svg>
+  );
+}
+
+function BangladeshClimate() {
+  const { t } = useContext(AppContext);
+
+  return (
+    <motion.section
+      className="bgc-section"
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-8%" }}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <div className="bgc-photo" />
+      <div className="bgc-overlay" />
+      <div className="bgc-inner">
+        <div className="bgc-heading">
+          <span className="bgc-eyebrow">{t["bgc.eyebrow"]}</span>
+          <h2 className="bgc-title">{t["bgc.title"]}</h2>
+        </div>
+
+        <div className="bgc-cards">
+          <div className="bgc-card bgc-card--heat">
+            <ArcGauge
+              fraction={0.4}
+              trackColor="rgba(255,255,255,0.10)"
+              glowColor="rgba(232,97,26,0.25)"
+              gradientFrom="#E8A830"
+              gradientTo="#E8611A"
+              duration={1500}
+            >
+              <div className="bgc-gauge-value" style={{ color: "#E8611A" }}>
+                {t["bgc.heat.value"]}
+              </div>
+              <div className="bgc-gauge-label" style={{ color: "rgba(232,97,26,0.7)" }}>
+                {t["bgc.heat.label"]}
+              </div>
+            </ArcGauge>
+          </div>
+
+          <div className="bgc-card bgc-card--humidity">
+            <ArcGauge
+              fraction={0.8}
+              trackColor="rgba(255,255,255,0.10)"
+              glowColor="rgba(46,139,192,0.25)"
+              gradientFrom="#56C8F0"
+              gradientTo="#1A6ABA"
+              duration={1800}
+              delay={300}
+            >
+              <WaterDropIcon />
+              <div className="bgc-gauge-value" style={{ color: "#2E8BC0" }}>
+                {t["bgc.humidity.value"]}
+              </div>
+              <div className="bgc-gauge-label" style={{ color: "rgba(46,139,192,0.7)" }}>
+                {t["bgc.humidity.label"]}
+              </div>
+            </ArcGauge>
+          </div>
+        </div>
+
+        <p className="bgc-closing">{t["bgc.closing"]}</p>
+      </div>
+    </motion.section>
+  );
+}
+
+export default BangladeshClimate;
