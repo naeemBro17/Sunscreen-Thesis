@@ -718,92 +718,133 @@ a {
   .tf-cards { grid-template-columns: 1fr; }
 }
 
-/* ---------- Bangladesh Climate section (bgc) ---------- */
-.bgc-section {
-  position: relative;
-  padding: 56px 22px;
+/* ---------- Bangladesh Climate section (clim) ---------- */
+.clim-section {
+  padding: 64px 24px;
   border-top: 1px solid var(--line);
 }
-.bgc-photo {
-  position: absolute;
-  inset: 0;
-  background-image: url('/images/sunset.png');
-  background-size: cover;
-  background-position: center top;
-}
-.bgc-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(10,8,6,0.55) 0%, rgba(10,8,6,0.75) 100%);
-}
-[data-theme="light"] .bgc-overlay {
-  background: linear-gradient(to bottom, rgba(246,241,234,0.15) 0%, rgba(246,241,234,0.35) 100%);
-}
-.bgc-inner {
-  position: relative;
-  z-index: 1;
+.clim-inner {
   max-width: 720px;
   margin: 0 auto;
-}
-
-.bgc-title {
-  text-align: center;
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: clamp(1.9rem, 5vw, 2.8rem);
-  color: var(--hero-ink);
-  margin-bottom: 32px;
-  line-height: 1.25;
-}
-[data-theme="light"] .bgc-title { color: #2A2117; }
-
-.bgc-cards {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.bgc-card {
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border: 1px solid rgba(255,255,255,0.15);
-  isolation: isolate;
-  border-radius: 20px;
-  padding: 28px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 24px;
   text-align: center;
 }
-.bgc-card--heat {
+
+.clim-eyebrow {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--teal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.clim-eyebrow::before { content: ""; width: 20px; height: 1px; background: var(--teal); }
+
+.clim-title {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(1.7rem, 4.5vw, 2.6rem);
+  color: var(--cream);
+  line-height: 1.25;
+}
+
+.clim-card {
+  width: 100%;
+  max-width: 460px;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 28px 16px 24px;
+  display: flex;
+  align-items: stretch;
+}
+
+.clim-panel {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 34px;
+}
+
+.clim-divider {
+  flex: 0 0 1px;
+  align-self: stretch;
+  background: var(--line);
+  margin: 0 8px;
+}
+
+.clim-badge {
+  position: absolute;
+  top: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  line-height: 1;
+}
+.clim-badge--temp {
+  left: 0;
   background: rgba(232,97,26,0.12);
-  border: 1px solid rgba(232,97,26,0.30);
-  box-shadow: inset 0 1px 0 rgba(255,200,100,0.15), 0 0 60px rgba(232,97,26,0.10);
+  border: 1px solid rgba(232,97,26,0.25);
 }
-.bgc-card--humidity {
+.clim-badge--humidity {
+  right: 0;
   background: rgba(46,139,192,0.12);
-  border: 1px solid rgba(46,139,192,0.30);
-  box-shadow: inset 0 1px 0 rgba(100,200,255,0.15), 0 0 60px rgba(46,139,192,0.10);
+  border: 1px solid rgba(46,139,192,0.25);
 }
 
-.arc-gauge { position: relative; width: 130px; height: 130px; margin: 0 auto; }
-.arc-gauge-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.arc-gauge-center {
+.clim-gauge-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 180px;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+}
+.clim-gauge-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.clim-gauge-center {
   position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
 }
-.arc-gauge-readout { display: flex; flex-direction: column; align-items: center; }
 
-.bgc-drop-icon { display: block; margin-bottom: 6px; }
-.bgc-gauge-value { font-family: var(--serif); font-size: 32px; font-weight: 400; line-height: 1; }
-.bgc-gauge-label {
-  font-family: var(--mono); font-size: 13px;
-  letter-spacing: 0.1em; text-transform: uppercase;
+.clim-gauge-value {
+  font-family: var(--serif);
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--heat);
+}
+.clim-gauge-value--humidity { color: var(--humid); }
+
+.clim-gauge-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
   margin-top: 6px;
+  color: rgba(232,97,26,0.7);
+}
+.clim-gauge-label--humidity { color: rgba(46,139,192,0.7); }
+
+.clim-source {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--cream-mute);
 }
 
 @media (max-width: 480px) {
-  .bgc-cards { grid-template-columns: 1fr; max-width: 280px; margin: 0 auto; }
-  .bgc-card { padding: 24px 20px; }
+  .clim-card { padding: 24px 12px 20px; }
+  .clim-gauge-value { font-size: 30px; }
 }

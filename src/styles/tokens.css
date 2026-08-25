@@ -16,6 +16,10 @@
   --line:       rgba(244,239,232,0.07);
   --line-soft:  rgba(244,239,232,0.04);
 
+  /* Climate gauge accents — Bangladesh climate section */
+  --heat:  #E8611A;
+  --humid: #2E8BC0;
+
   /* Country identity colors — used in tables and country-comparison bar charts */
   --country-australia: #34A853;
   --country-japan:     #4285F4;
@@ -64,6 +68,9 @@
   --sand-deep:  #7A2D1E;
   --line:       rgba(24,20,14,0.09);
   --line-soft:  rgba(24,20,14,0.05);
+
+  --heat:  #C8440A;
+  --humid: #1A6A9E;
 
   /* Country/severity hues stay the same in light mode — only tint alpha drops */
   --tint-australia: 7%;
