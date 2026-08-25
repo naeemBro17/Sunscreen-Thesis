@@ -14,6 +14,7 @@ import SourceList from "./components/SourceList";
 import IndiaReview from "./components/IndiaReview";
 import AustraliaReport from "./components/AustraliaReport";
 import TwoFutures from "./components/TwoFutures";
+import ClimateSection from "./components/ClimateSection";
 import Footer from "./components/Footer";
 import ReadingProgress from "./components/ReadingProgress";
 
@@ -52,6 +53,7 @@ function Main() {
       <ChapterBlock section="s5">
         <Cards section="s5" count={3} />
       </ChapterBlock>
+      <ClimateSection />
       <ChapterBlock section="s6">
         <TypeGrid section="s6" count={4} />
         <InfoBox section="s6.tint" />
