@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { motion } from "framer-motion";
 import { AppContext } from "../context/AppContext";
+import SectionDivider from "./SectionDivider";
 
 const BN_DIGITS = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
 const TEST_NUMS = [1, 2, 3, 4];
@@ -48,12 +49,14 @@ function AustraliaReport({ section }) {
 
   return (
     <motion.section
+      id={section}
       className="chapter chapter-s8"
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-8%" }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
     >
+      <SectionDivider section={section} />
       <div className="au-entry">
         <div className="au-eyebrow">{t[`${section}.kicker`]}</div>
         <h1 className="au-title">{renderTitle(t[`${section}.title`])}</h1>

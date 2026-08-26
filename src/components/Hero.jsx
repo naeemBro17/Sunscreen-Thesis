@@ -42,7 +42,7 @@ function Hero() {
 
         <div className="cta-row">
           <div className="cta-circle">↓</div>
-          <span className="cta-text">Read the Research</span>
+          <span className="cta-text">{t["hero.cta"]}</span>
         </div>
 
         <div className="byline">

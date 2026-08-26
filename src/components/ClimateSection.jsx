@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { AppContext } from "../context/AppContext";
 import useInViewOnce from "../hooks/useInViewOnce";
+import SectionDivider from "./SectionDivider";
 
 const START_ANGLE = (135 * Math.PI) / 180;
 const SWEEP_ANGLE = (270 * Math.PI) / 180;
@@ -171,6 +172,7 @@ function ClimateSection() {
 
   return (
     <motion.section
+      id="climate"
       className="clim-section"
       ref={sectionRef}
       initial={{ opacity: 0, y: 24 }}
@@ -178,6 +180,7 @@ function ClimateSection() {
       viewport={{ once: true, margin: "-8%" }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
     >
+      <SectionDivider section="climate" />
       <div className="clim-inner">
         <span className="clim-eyebrow">{t["climate.eyebrow"]}</span>
         <h2 className="clim-title">{t["climate.title"]}</h2>

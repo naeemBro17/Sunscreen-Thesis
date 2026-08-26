@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
+import Toc from "./Toc";
 
 function Header() {
   const { lang, setLang, theme, setTheme } = useContext(AppContext);
@@ -24,6 +25,7 @@ function Header() {
       </div>
 
       <div className="header-right">
+        <Toc />
         <button
           className="lang-toggle"
           onClick={() => setLang((l) => (l === "bn" ? "en" : "bn"))}
