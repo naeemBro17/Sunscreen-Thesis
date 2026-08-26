@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AppProvider, AppContext } from "./context/AppContext";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
@@ -67,9 +67,39 @@ function Main() {
   );
 }
 
+function ContentProtection() {
+  useEffect(() => {
+    const preventDefault = (e) => e.preventDefault();
+    const blockKeys = (e) => {
+      if ((e.ctrlKey || e.metaKey) && ["c", "x", "a", "s", "u", "p"].includes(e.key.toLowerCase())) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener("contextmenu", preventDefault);
+    document.addEventListener("copy", preventDefault);
+    document.addEventListener("cut", preventDefault);
+    document.addEventListener("dragstart", preventDefault);
+    document.addEventListener("selectstart", preventDefault);
+    document.addEventListener("keydown", blockKeys);
+
+    return () => {
+      document.removeEventListener("contextmenu", preventDefault);
+      document.removeEventListener("copy", preventDefault);
+      document.removeEventListener("cut", preventDefault);
+      document.removeEventListener("dragstart", preventDefault);
+      document.removeEventListener("selectstart", preventDefault);
+      document.removeEventListener("keydown", blockKeys);
+    };
+  }, []);
+
+  return null;
+}
+
 function App() {
   return (
     <AppProvider>
+      <ContentProtection />
       <ReadingProgress />
       <Header />
       <Main />

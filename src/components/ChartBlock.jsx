@@ -8,10 +8,6 @@ const AXIS_LABEL_WIDTH = 52;
 const BN_DIGITS = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
 const SEVERITY_LABEL_CLASS = ["dot-severity-low", "dot-severity-medium", "dot-severity-high"];
 const AUTO_DEMO_DURATION_MS = 1500;
-const BAR_CHART_HINT = {
-  bn: "বারে চাপ দিন বিস্তারিত দেখতে",
-  en: "Tap a bar for details",
-};
 
 function cssVar(name) {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -680,8 +676,8 @@ function ChartBlock({ section }) {
       <div className="chart-label">{title}</div>
       {sub && <p className="chart-sub">{sub}</p>}
       {config && <ChartLegend config={config} t={t} />}
-      <div className="chart-placeholder">{config ? canvas : "Chart loads here"}</div>
-      {config?.type === "bar" && <p className="chart-hint">{BAR_CHART_HINT[lang]}</p>}
+      <div className="chart-placeholder">{config ? canvas : t["ui.chartPlaceholder"]}</div>
+      {config?.type === "bar" && <p className="chart-hint">{t["ui.chartHint"]}</p>}
       {note && <div className="chart-note">{note}</div>}
     </div>
   );

@@ -6,8 +6,10 @@ function Footer() {
 
   return (
     <footer className="footer">
-      <div className="footer-brand">SkinScience</div>
-      <div className="footer-meta">Naeem Muhammad · 2026 · 100+ sources</div>
+      <div className="footer-brand">{t["foot.brand"]}</div>
+      <div className="footer-meta">
+        {t["hero.byline.name"]} · {t["foot.metaYear"]} · {t["hero.byline.stat2"]}
+      </div>
       {t["foot.tag"] && <p className="footer-tag">{t["foot.tag"]}</p>}
       {t["foot.disc"] && (
         <p className="footer-disc">
