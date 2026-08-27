@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { motion } from "framer-motion";
 import { AppContext } from "../context/AppContext";
-import SectionDivider, { getSectionDividerLabel } from "./SectionDivider";
+import SectionDivider, { sectionDividerHasName } from "./SectionDivider";
 
 const BN_DIGITS = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
 const TEST_NUMS = [1, 2, 3, 4];
@@ -37,9 +37,11 @@ function renderTitle(title) {
 function AustraliaReport({ section }) {
   const { t, lang } = useContext(AppContext);
   const [openTests, setOpenTests] = useState(() => new Set());
-  const dividerLabel = getSectionDividerLabel(section, t);
+  // The SectionDivider already renders the "Special Report" label for s8, so the
+  // hardcoded eyebrow/kicker here would duplicate it above the title. Only show
+  // the kicker when the divider is not already showing a name.
   const kickerRaw = t[`${section}.kicker`];
-  const kicker = kickerRaw && kickerRaw.trim() === (dividerLabel ?? "").trim() ? null : kickerRaw;
+  const kicker = sectionDividerHasName(section) ? null : kickerRaw;
 
   const toggleTest = (n) => {
     setOpenTests((prev) => {

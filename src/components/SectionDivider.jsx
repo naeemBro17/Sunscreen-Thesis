@@ -8,6 +8,14 @@ export function getSectionDividerLabel(section, t) {
   return meta.tocKey ? t[meta.tocKey] : t[meta.eyebrowKey];
 }
 
+// True when SectionDivider renders a visible category label for this section.
+// Used to avoid repeating that same label as a section eyebrow (which showed
+// up as a second identical underline above the title).
+export function sectionDividerHasName(section) {
+  const meta = SECTION_META[section];
+  return Boolean(meta && !meta.hideName && (meta.tocKey || meta.eyebrowKey));
+}
+
 function SectionDivider({ section }) {
   const { t } = useContext(AppContext);
   const meta = SECTION_META[section];

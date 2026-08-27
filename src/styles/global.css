@@ -274,7 +274,10 @@ p, .body-text, .lead, .card-text {
 .sec-title { font-family: var(--serif); font-size: clamp(28px, 5vw, 44px); font-weight: 600; line-height: 1.2; color: var(--cream); letter-spacing: -.01em; margin-bottom: 20px; }
 
 /* ---------- Chapter block ---------- */
-.chapter { padding: 72px 22px; max-width: 720px; margin: 0 auto; }
+/* Vertical padding here is also the gap BETWEEN sections (adjacent sections each
+   contribute their padding). Kept at 40px so desktop section-to-section gap is
+   80px; the mobile override below brings it to 48px. */
+.chapter { padding: 40px 22px; max-width: 720px; margin: 0 auto; }
 .chapter-body { font-family: var(--mono); font-size: 11px; line-height: 1.9; color: var(--cream-soft); margin-top: 20px; letter-spacing: .02em; }
 
 /* ---------- Section divider ---------- */
@@ -1018,7 +1021,7 @@ p, .body-text, .lead, .card-text {
 
 /* ---------- Bangladesh Climate section (clim) ---------- */
 .clim-section {
-  padding: 64px 24px;
+  padding: 40px 24px;
 }
 .clim-inner {
   max-width: 720px;
@@ -1144,4 +1147,17 @@ p, .body-text, .lead, .card-text {
 @media (max-width: 480px) {
   .clim-card { padding: 24px 12px 20px; }
   .clim-gauge-value { font-size: 30px; }
+}
+
+/* ---------- Section-to-section gap on mobile ---------- */
+/* 24px outer vertical padding per section => 48px between adjacent sections.
+   Only the outer padding changes — content spacing inside sections is untouched.
+   Placed last so it overrides the base .chapter / .clim-section / .two-futures rules. */
+@media (max-width: 640px) {
+  .chapter,
+  .clim-section,
+  .two-futures {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
 }
