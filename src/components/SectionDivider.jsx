@@ -17,7 +17,7 @@ function SectionDivider({ section }) {
   return (
     <div className="section-divider">
       <span className="section-divider-num">{meta.number}</span>
-      <span className="section-divider-name">{label}</span>
+      {!meta.hideName && <span className="section-divider-name">{label}</span>}
     </div>
   );
 }

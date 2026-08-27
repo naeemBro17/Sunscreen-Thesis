@@ -1,6 +1,6 @@
 export const SECTION_META = {
-  s1: { number: "01", tocKey: "toc.1" },
-  s2: { number: "02", tocKey: "toc.2" },
+  s1: { number: "01", tocKey: "toc.1", hideName: true },
+  s2: { number: "02", tocKey: "toc.2", hideName: true },
   s3: { number: "03", tocKey: "toc.3" },
   s4: { number: "04", tocKey: "toc.4" },
   s4b: { number: "05", eyebrowKey: "s4b.eyebrow" },

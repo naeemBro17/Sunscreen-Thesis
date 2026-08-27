@@ -370,7 +370,15 @@ p, .body-text, .lead, .card-text {
 .info-box { border: 1px solid var(--line); border-left: 2px solid var(--sand); border-radius: 0 8px 8px 0; padding: 18px 20px; margin-top: 28px; background: var(--bg-panel); }
 .info-box-head { font-family: var(--serif); font-size: 14px; font-weight: 500; color: var(--cream); margin-bottom: 8px; }
 .info-box-body { font-family: var(--mono); font-size: 11px; line-height: 1.85; color: var(--cream-soft); }
+.info-box-body + .info-box-body { margin-top: 12px; }
 .info-box-cite { font-family: var(--mono); font-size: 9px; color: var(--cream-mute); margin-top: 10px; line-height: 1.7; }
+
+/* Info-box sub-sections — styled eyebrow dividers between grouped examples */
+.info-box-sub--spaced { margin-top: 40px; }
+.info-box-sub-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.info-box-sub-num { font-family: var(--mono); font-size: 11px; color: var(--cream-mute); }
+.info-box-sub-title { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--teal); }
+.info-box-sub-rule { width: 28px; height: 1px; background: var(--teal); margin-top: 8px; margin-bottom: 16px; }
 
 /* ---------- Regulatory comparison table (s2) ---------- */
 .reg-table-wrap { margin-top: 28px; overflow-x: auto; }
