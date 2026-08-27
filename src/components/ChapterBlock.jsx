@@ -2,11 +2,13 @@ import { useContext } from "react";
 import { motion } from "framer-motion";
 import { AppContext } from "../context/AppContext";
 import SectionHeading from "./SectionHeading";
-import SectionDivider from "./SectionDivider";
+import SectionDivider, { getSectionDividerLabel } from "./SectionDivider";
 
 function ChapterBlock({ section, children }) {
   const { t } = useContext(AppContext);
-  const eyebrow = t[`${section}.eyebrow`] ?? t[`${section}.kicker`];
+  const dividerLabel = getSectionDividerLabel(section, t);
+  const eyebrowRaw = t[`${section}.eyebrow`] ?? t[`${section}.kicker`];
+  const eyebrow = eyebrowRaw && eyebrowRaw.trim() === (dividerLabel ?? "").trim() ? null : eyebrowRaw;
   const title = t[`${section}.title`];
   const body = t[`${section}.lead`] ?? t[`${section}.body`];
   const bodyIsHtml = /<[a-z][\s\S]*>/i.test(body ?? "");
