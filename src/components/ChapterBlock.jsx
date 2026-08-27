@@ -2,11 +2,15 @@ import { useContext } from "react";
 import { motion } from "framer-motion";
 import { AppContext } from "../context/AppContext";
 import SectionHeading from "./SectionHeading";
-import SectionDivider from "./SectionDivider";
+import SectionDivider, { sectionDividerHasName } from "./SectionDivider";
 
 function ChapterBlock({ section, children }) {
   const { t } = useContext(AppContext);
-  const eyebrow = t[`${section}.eyebrow`] ?? t[`${section}.kicker`];
+  const eyebrowRaw = t[`${section}.eyebrow`] ?? t[`${section}.kicker`];
+  // When the SectionDivider already shows this section's category label, don't
+  // repeat it as an eyebrow — that rendered a second identical teal rule/underline
+  // directly above the title.
+  const eyebrow = sectionDividerHasName(section) ? null : eyebrowRaw;
   const title = t[`${section}.title`];
   const body = t[`${section}.lead`] ?? t[`${section}.body`];
   const bodyIsHtml = /<[a-z][\s\S]*>/i.test(body ?? "");

@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { AppContext } from "../context/AppContext";
 import useInViewOnce from "../hooks/useInViewOnce";
-import SectionDivider from "./SectionDivider";
+import SectionDivider, { getSectionDividerLabel } from "./SectionDivider";
 
 const START_ANGLE = (135 * Math.PI) / 180;
 const SWEEP_ANGLE = (270 * Math.PI) / 180;
@@ -169,6 +169,9 @@ function ClimateSection() {
   const tempValueRef = useRef(null);
   const humidValueRef = useRef(null);
   const trackColor = theme === "light" ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.08)";
+  const dividerLabel = getSectionDividerLabel("climate", t);
+  const eyebrowRaw = t["climate.eyebrow"];
+  const eyebrow = eyebrowRaw && eyebrowRaw.trim() === (dividerLabel ?? "").trim() ? null : eyebrowRaw;
 
   return (
     <motion.section
@@ -182,7 +185,7 @@ function ClimateSection() {
     >
       <SectionDivider section="climate" />
       <div className="clim-inner">
-        <span className="clim-eyebrow">{t["climate.eyebrow"]}</span>
+        {eyebrow && <span className="clim-eyebrow">{eyebrow}</span>}
         <h2 className="clim-title">{t["climate.title"]}</h2>
 
         <div className="clim-card">

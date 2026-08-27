@@ -1,7 +1,7 @@
 function SectionHeading({ eyebrow, title }) {
   return (
     <div className="sec-heading">
-      <span className="sec-eyebrow" dangerouslySetInnerHTML={{ __html: eyebrow }} />
+      {eyebrow && <span className="sec-eyebrow" dangerouslySetInnerHTML={{ __html: eyebrow }} />}
       <h2 className="sec-title" dangerouslySetInnerHTML={{ __html: title }} />
     </div>
   );

@@ -11,7 +11,7 @@ export const content = {
   "hero.abstractLabel": `Abstract`,
   "hero.abstract": `The sophistication of a sunscreen's UV filters accounts for only half of its real-world protective capacity. The other half depends on whether the film those filters are carried in — the layer formed on the skin's surface — remains intact under perspiration, sebum, and heat. This report distinguishes between these two distinct failure modes and compares how different regulatory frameworks address the second.`,
   "hero.byline.name": `Naeem Muhammad`,
-  "hero.byline.stat1": `80 days of research`,
+  "hero.byline.stat1": `180 days of research`,
   "hero.byline.stat2": `100+ sources`,
   "hero.scroll": `Read the research`,
   "hero.cta": `Read the Research`,
@@ -26,6 +26,7 @@ export const content = {
   "toc.6": `Selection Framework`,
   "toc.7": `References`,
   "toc.8": `Special Report`,
+  "toc.realworld": `Illustrative Example`,
   "s1.eyebrow": `The Core Problem`,
   "s1.title": `One number — but two entirely different questions`,
   "s1.lead": `The SPF value on a sunscreen label is a measurement obtained under controlled laboratory conditions. The real question is whether that same result holds on a street in Bangladesh — in heat, in sunlight, and in sweat. This section explains why the answer is not always yes.`,
@@ -95,9 +96,12 @@ export const content = {
   "s2.r6.in": `CDSCO Cosmetics Rules 2020 · BIS IS 4707:2022`,
   "s2.caption": `All data sourced from official regulatory documentation. Sources: TGA Australian Regulatory Guidelines for Sunscreens (ARGS); AS/NZS 2604:2021; MHLW Pharmaceutical and Medical Device Act; JCIA Guidelines; MFDS Functional Cosmetics Regulation; CDSCO Cosmetics Rules 2020; BIS IS 4707:2022; ISO 24444:2019; ISO 18861:2020.`,
   "s2.au.head": `A documented case study in active regulatory enforcement`,
-  "s2.au.body": `1. Australia's regulatory oversight of sunscreen products is among the most active in the world. In June 2025, when the independent consumer organisation CHOICE published test results indicating that several commercially available sunscreens had failed to meet their labelled SPF claims, the Therapeutic Goods Administration (TGA) initiated a formal investigation within days. The incident was covered by Australia's national broadcaster and widely referred to as "Australia's sunscreen scandal." The regulatory response was decisive: nineteen products sharing a common base formulation were officially recalled from the market and had their licences revoked. In March 2026, the TGA proposed further tightening, including mandatory laboratory accreditation requirements and standardised data submission obligations for manufacturers.
-
-2. The La Roche-Posay Anthelios UVMune 400 is widely regarded as one of the most scientifically advanced sunscreen formulations currently available, representing approximately a decade of R&D. In 2022, L'Oréal introduced the UVMune 400 technology, with La Roche-Posay Anthelios becoming the first brand to market it. Its central innovation is the Mexoryl 400 filter, engineered to protect against ultra-long UVA radiation in the 380–400 nanometre range — a band that most conventional filters address inadequately.
+  //"s2.au.sub1.num": `01`,
+  "s2.au.sub1.title": `AUSTRALIA'S SUNSCREEN SCANDAL`,
+  "s2.au.body1": `Australia's regulatory oversight of sunscreen products is among the most active in the world. In June 2025, when the independent consumer organisation CHOICE published test results indicating that several commercially available sunscreens had failed to meet their labelled SPF claims, the Therapeutic Goods Administration (TGA) initiated a formal investigation within days. The incident was covered by Australia's national broadcaster and widely referred to as "Australia's sunscreen scandal." The regulatory response was decisive: nineteen products sharing a common base formulation were officially recalled from the market and had their licences revoked. In March 2026, the TGA proposed further tightening, including mandatory laboratory accreditation requirements and standardised data submission obligations for manufacturers.`,
+  //"s2.au.sub2.num": `02`,
+  "s2.au.sub2.title": `La Roche-Posay UVMune 400`,
+  "s2.au.body2": `The La Roche-Posay Anthelios UVMune 400 is widely regarded as one of the most scientifically advanced sunscreen formulations currently available, representing approximately a decade of R&D. In 2022, L'Oréal introduced the UVMune 400 technology, with La Roche-Posay Anthelios becoming the first brand to market it. Its central innovation is the Mexoryl 400 filter, engineered to protect against ultra-long UVA radiation in the 380–400 nanometre range — a band that most conventional filters address inadequately.
 
 While available internationally from 2022, its entry into the Australian market required compliance with Australia's distinct regulatory framework, under which sunscreens are classified as Therapeutic Goods. This reflects the severity of UV-related health risks in Australia: approximately two in three Australians will be diagnosed with skin cancer at some point in their lifetime, with an estimated 1.6 to 1.8 million new cases annually and an overall case fatality rate of 0.1–0.2%.
 
@@ -132,13 +136,13 @@ Australia's Therapeutic Goods Administration conducts routine post-market survei
   "s4.note": `These figures represent an approximate relative index constructed from the Petersen & Wulf (2014) dose-response model and published data on film degradation under perspiration. They are not clinical outcome predictions for any specific individual.`,
   "s4.uv.label": `UVA and UVB — two distinct threats`,
   "s4.uv.b.name": `The sunburn ray`,
-  "s4.uv.b.list": `Causes skin reddening and sunburn. Damages the epidermis (outermost skin layer). Causes direct DNA strand breaks. Primary driver of skin cancer. The radiation measured by SPF.`,
+  "s4.uv.b.list": `<li>Causes skin reddening and sunburn.</li><li>Damages the epidermis (outermost skin layer).</li><li>Causes direct DNA strand breaks.</li><li>Primary driver of skin cancer.</li><li>The radiation measured by SPF.</li>`,
   "s4.uv.b.reach": `Skin penetration depth: to the epidermis`,
   "s4.uv.a.name": `The silent damage ray`,
-  "s4.uv.a.list": `Does not cause sunburn — damage is imperceptible. Penetrates to the dermis (deep skin layer). Degrades collagen — causes wrinkles and skin laxity. Primary cause of melasma and persistent pigmentation. Penetrates window glass into indoor environments.`,
+  "s4.uv.a.list": `<li>Does not cause sunburn — damage is imperceptible.</li><li>Penetrates to the dermis (deep skin layer).</li><li>Degrades collagen — causes wrinkles and skin laxity.</li><li>Primary cause of melasma and persistent pigmentation.</li><li>Penetrates window glass into indoor environments.</li>`,
   "s4.uv.a.reach": `Skin penetration depth: to the dermis (substantially deeper than UVB)`,
   "s4.uv.note": `Approximately 95% of solar UV reaching the Earth's surface is UVA; 5% is UVB. UVA arrives consistently throughout the day, across all seasons, and through cloud cover. SPF measures protection against UVB only — a separate PA+++ or UVA-PF rating is required to assess UVA protection.`,
-  "s4b.button": `View a real-world illustration`,
+  "s4b.button": `CLICK HERE`,
   "s4b.eyebrow": `Illustrative Example`,
   "s4b.legend.a": `Naeema (TGA)`,
   "s4b.legend.b": `Mim`,
