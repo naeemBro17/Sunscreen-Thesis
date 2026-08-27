@@ -44,12 +44,24 @@ a {
   text-decoration: none;
 }
 
-/* ---------- Body text justification ---------- */
+/* ---------- Body text justification (no word breaking / hyphenation) ---------- */
 p, .body-text, .lead, .card-text {
   text-align: justify;
-  hyphens: auto;
-  -webkit-hyphens: auto;
-  word-break: break-word;
+  hyphens: none;
+  -webkit-hyphens: none;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* ---------- Citations / sources / footnotes — always left-aligned ---------- */
+.s8-cite, .citation, .source, .footnote, .chart-note, .chart-hint,
+.info-box-cite, .card-item-foot, .reg-table-caption,
+.uv-compare-note, .uv-compare-reach,
+.source-list-text, .au-citation,
+.tf-swipe-stage-source, .tf-sources, .clim-source {
+  text-align: left !important;
+  hyphens: none;
+  -webkit-hyphens: none;
 }
 
 /* ---------- Reading progress ---------- */
@@ -257,8 +269,8 @@ p, .body-text, .lead, .card-text {
 .scroll-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--teal); }
 
 /* ---------- Section heading ---------- */
-.sec-eyebrow { font-family: var(--mono); font-size: 9px; letter-spacing: .16em; text-transform: uppercase; color: var(--teal); display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-.sec-eyebrow::before { content: ""; width: 20px; height: 1px; background: var(--teal); }
+.sec-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: var(--teal); display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.sec-eyebrow::before { content: ""; width: 24px; height: 1px; background: var(--teal); flex-shrink: 0; }
 .sec-title { font-family: var(--serif); font-size: clamp(28px, 5vw, 44px); font-weight: 600; line-height: 1.2; color: var(--cream); letter-spacing: -.01em; margin-bottom: 20px; }
 
 /* ---------- Chapter block ---------- */
@@ -267,25 +279,35 @@ p, .body-text, .lead, .card-text {
 
 /* ---------- Section divider ---------- */
 .section-divider {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  display: block;
   border-top: 1px solid var(--line);
   padding-top: 32px;
   margin-bottom: 0;
 }
 .section-divider-num {
+  display: block;
   font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: .12em;
+  font-size: 11px;
+  letter-spacing: .1em;
   color: var(--cream-mute);
+  margin-bottom: 12px;
 }
 .section-divider-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: .15em;
   text-transform: uppercase;
   color: var(--teal);
+}
+.section-divider-name::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: var(--teal);
+  flex-shrink: 0;
 }
 .section-divider + * { margin-top: 24px; }
 
@@ -339,12 +361,49 @@ p, .body-text, .lead, .card-text {
   z-index: 5;
 }
 
-/* ---------- Footer ---------- */
-.footer { padding: 48px 22px; border-top: 1px solid var(--line); text-align: center; }
-.footer-brand { font-family: var(--serif); color: var(--cream-soft); font-size: 18px; margin-bottom: 8px; }
-.footer-meta { font-family: var(--mono); color: var(--cream-mute); font-size: 9px; letter-spacing: .08em; }
-.footer-tag { font-family: var(--mono); color: var(--cream-mute); font-size: 9px; line-height: 1.8; max-width: 480px; margin: 16px auto 0; }
-.footer-disc { font-family: var(--mono); color: var(--cream-mute); font-size: 9px; line-height: 1.8; max-width: 480px; margin: 10px auto 0; }
+/* ---------- Footer — cinematic centered credits ---------- */
+.footer {
+  padding: 56px 22px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  text-align: center;
+}
+.footer-line {
+  text-align: center;
+  max-width: 480px;
+  hyphens: none;
+  -webkit-hyphens: none;
+}
+.footer-brand {
+  font-family: var(--serif);
+  color: var(--cream);
+  font-size: 22px;
+  letter-spacing: .01em;
+}
+.footer-byline {
+  font-family: var(--mono);
+  color: var(--cream-mute);
+  font-size: clamp(7px, 2.5vw, 10px);
+  letter-spacing: .06em;
+  white-space: nowrap;
+}
+.footer-tag {
+  font-family: var(--mono);
+  color: var(--cream-mute);
+  font-size: 10px;
+  line-height: 1.8;
+  letter-spacing: .04em;
+}
+.footer-disc {
+  font-family: var(--mono);
+  color: var(--cream-mute);
+  font-size: 9px;
+  line-height: 1.8;
+  letter-spacing: .03em;
+}
 .footer-disc-label { color: var(--cream-soft); font-weight: 600; }
 
 /* ---------- Chapter guide callout ---------- */
